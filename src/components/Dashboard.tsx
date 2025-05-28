@@ -11,7 +11,9 @@ import {
   CheckCircle,
   Clock,
   Download,
-  RefreshCw
+  RefreshCw,
+  FileText,
+  Database
 } from "lucide-react";
 import { MetricsCards } from "@/components/dashboard/MetricsCards";
 import { ActivityChart } from "@/components/dashboard/ActivityChart";
@@ -25,17 +27,17 @@ export function Dashboard() {
       <div className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600">Welcome back! Here's what's happening with your field operations.</p>
+            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+            <p className="text-gray-600">Monitor and manage field data collected by mobile officers</p>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline" size="sm">
               <Download className="w-4 h-4 mr-2" />
-              Export Report
+              Export Data
             </Button>
             <Button size="sm">
               <RefreshCw className="w-4 h-4 mr-2" />
-              Sync Data
+              Sync Mobile Data
             </Button>
           </div>
         </div>
@@ -55,69 +57,87 @@ export function Dashboard() {
         {/* Map Widget */}
         <MapWidget />
 
-        {/* Recent Activity */}
+        {/* Recent Data Submissions */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Clock className="w-5 h-5" />
-              Recent Activity
+              <Database className="w-5 h-5" />
+              Recent Field Data Submissions
             </CardTitle>
             <CardDescription>
-              Latest updates from field officers and system events
+              Latest data received from field officers via mobile app
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               {[
                 {
-                  type: "upload",
+                  type: "photo",
                   officer: "John Doe",
-                  action: "Uploaded 15 photos from Farm A-23",
+                  action: "Submitted 15 cocoa tree photos from Farm A-23",
                   time: "2 minutes ago",
-                  status: "success"
+                  status: "pending_review",
+                  location: "Ashanti Region"
                 },
                 {
-                  type: "sync",
+                  type: "polygon",
                   officer: "Mary Johnson",
-                  action: "Synced polygon data for Region B",
+                  action: "Uploaded farm boundary polygon for Region B",
                   time: "15 minutes ago",
-                  status: "success"
+                  status: "approved",
+                  location: "Eastern Region"
                 },
                 {
                   type: "report",
                   officer: "David Smith",
-                  action: "Submitted supervisor report for cocoa assessment",
+                  action: "Submitted supervisor assessment report",
                   time: "1 hour ago",
-                  status: "pending"
+                  status: "pending_review",
+                  location: "Central Region"
                 },
                 {
-                  type: "error",
-                  officer: "System",
-                  action: "Sync failed for Officer Badge #127",
+                  type: "video",
+                  officer: "Sarah Wilson",
+                  action: "Uploaded field condition video documentation",
                   time: "2 hours ago",
-                  status: "error"
+                  status: "approved",
+                  location: "Western Region"
                 }
-              ].map((activity, index) => (
-                <div key={index} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100">
+              ].map((submission, index) => (
+                <div key={index} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
                   <div className={`w-2 h-2 rounded-full mt-2 ${
-                    activity.status === 'success' ? 'bg-green-500' :
-                    activity.status === 'pending' ? 'bg-yellow-500' :
+                    submission.status === 'approved' ? 'bg-green-500' :
+                    submission.status === 'pending_review' ? 'bg-yellow-500' :
                     'bg-red-500'
                   }`} />
                   <div className="flex-1">
-                    <div className="font-medium text-gray-900">{activity.officer}</div>
-                    <div className="text-gray-600">{activity.action}</div>
-                    <div className="text-sm text-gray-500">{activity.time}</div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-gray-900">{submission.officer}</span>
+                      <span className="text-sm text-gray-500">• {submission.location}</span>
+                    </div>
+                    <div className="text-gray-600">{submission.action}</div>
+                    <div className="text-sm text-gray-500">{submission.time}</div>
                   </div>
-                  <Badge variant={
-                    activity.status === 'success' ? 'default' :
-                    activity.status === 'pending' ? 'secondary' :
-                    'destructive'
-                  }>
-                    {activity.status}
-                  </Badge>
+                  <div className="flex items-center gap-2">
+                    {submission.type === 'photo' && <Image className="w-4 h-4 text-blue-500" />}
+                    {submission.type === 'polygon' && <Map className="w-4 h-4 text-green-500" />}
+                    {submission.type === 'report' && <FileText className="w-4 h-4 text-purple-500" />}
+                    {submission.type === 'video' && <Image className="w-4 h-4 text-red-500" />}
+                    <Badge variant={
+                      submission.status === 'approved' ? 'default' :
+                      submission.status === 'pending_review' ? 'secondary' :
+                      'destructive'
+                    }>
+                      {submission.status.replace('_', ' ')}
+                    </Badge>
+                  </div>
                 </div>
               ))}
+            </div>
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <Button variant="outline" className="w-full">
+                View All Submissions
+              </Button>
             </div>
           </CardContent>
         </Card>

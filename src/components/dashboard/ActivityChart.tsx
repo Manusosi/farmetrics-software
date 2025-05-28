@@ -1,24 +1,24 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 export function ActivityChart() {
   const data = [
-    { name: 'Mon', uploads: 45, reports: 12 },
-    { name: 'Tue', uploads: 62, reports: 18 },
-    { name: 'Wed', uploads: 38, reports: 9 },
-    { name: 'Thu', uploads: 71, reports: 24 },
-    { name: 'Fri', uploads: 56, reports: 15 },
-    { name: 'Sat', uploads: 23, reports: 6 },
-    { name: 'Sun', uploads: 18, reports: 4 }
+    { name: 'Mon', photos: 45, videos: 8, polygons: 12, reports: 6 },
+    { name: 'Tue', videos: 12, photos: 62, polygons: 18, reports: 9 },
+    { name: 'Wed', photos: 38, videos: 6, polygons: 9, reports: 4 },
+    { name: 'Thu', photos: 71, videos: 15, polygons: 24, reports: 12 },
+    { name: 'Fri', photos: 56, videos: 11, polygons: 15, reports: 8 },
+    { name: 'Sat', photos: 23, videos: 4, polygons: 6, reports: 2 },
+    { name: 'Sun', photos: 18, videos: 2, polygons: 4, reports: 1 }
   ];
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Weekly Activity Trends</CardTitle>
+        <CardTitle>Weekly Data Collection Trends</CardTitle>
         <CardDescription>
-          Data uploads and report submissions over the past week
+          Field data submissions received from mobile officers
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -28,8 +28,11 @@ export function ActivityChart() {
             <XAxis dataKey="name" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="uploads" fill="#10b981" name="Media Uploads" />
-            <Bar dataKey="reports" fill="#3b82f6" name="Reports" />
+            <Legend />
+            <Bar dataKey="photos" fill="#10b981" name="Photos" />
+            <Bar dataKey="videos" fill="#3b82f6" name="Videos" />
+            <Bar dataKey="polygons" fill="#f59e0b" name="Polygons" />
+            <Bar dataKey="reports" fill="#8b5cf6" name="Reports" />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

@@ -5,23 +5,33 @@ import {
   Users, 
   Image, 
   Map, 
-  TrendingUp, 
   Activity,
-  MapPin
+  FileText,
+  CheckCircle,
+  Clock,
+  Database
 } from "lucide-react";
 
 export function MetricsCards() {
   const metrics = [
     {
-      title: "Total Farms Mapped",
+      title: "Data Submissions Today",
+      value: "127",
+      change: "+18%",
+      changeType: "positive" as const,
+      icon: Database,
+      description: "Photos, videos, polygons received"
+    },
+    {
+      title: "Farm Polygons Mapped",
       value: "1,247",
       change: "+12%",
       changeType: "positive" as const,
       icon: Map,
-      description: "Polygon boundaries captured"
+      description: "GPS boundaries from field officers"
     },
     {
-      title: "Media Files Uploaded",
+      title: "Media Files Received",
       value: "8,439",
       change: "+23%",
       changeType: "positive" as const,
@@ -34,15 +44,39 @@ export function MetricsCards() {
       change: "+2",
       changeType: "positive" as const,
       icon: Users,
-      description: "Currently in field"
+      description: "Currently submitting data"
     },
     {
-      title: "Data Points Collected",
-      value: "15.2K",
-      change: "+8%",
+      title: "Pending Reviews",
+      value: "45",
+      change: "-8%",
+      changeType: "positive" as const,
+      icon: Clock,
+      description: "Submissions awaiting approval"
+    },
+    {
+      title: "Reports Submitted",
+      value: "89",
+      change: "+15%",
+      changeType: "positive" as const,
+      icon: FileText,
+      description: "Supervisor assessments this week"
+    },
+    {
+      title: "Data Quality Score",
+      value: "94%",
+      change: "+2%",
+      changeType: "positive" as const,
+      icon: CheckCircle,
+      description: "GPS accuracy & completeness"
+    },
+    {
+      title: "Sync Success Rate",
+      value: "98.7%",
+      change: "+0.3%",
       changeType: "positive" as const,
       icon: Activity,
-      description: "Manual entries this week"
+      description: "Mobile app data transfers"
     }
   ];
 
