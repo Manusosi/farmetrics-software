@@ -9,6 +9,10 @@ import { FieldOfficers } from "./pages/FieldOfficers";
 import { MediaReview } from "./pages/MediaReview";
 import { FarmMapping } from "./pages/FarmMapping";
 import { Reports } from "./pages/Reports";
+import { Analytics } from "./pages/Analytics";
+import { Messaging } from "./pages/Messaging";
+import { Roles } from "./pages/Roles";
+import { Settings } from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +29,10 @@ const App = () => (
           <Route path="/media" element={<MediaReview />} />
           <Route path="/mapping" element={<FarmMapping />} />
           <Route path="/reports" element={<Reports />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/messaging" element={<Messaging />} />
+          <Route path="/roles" element={<Roles />} />
+          <Route path="/settings" element={<Settings />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
