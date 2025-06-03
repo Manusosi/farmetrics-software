@@ -28,10 +28,10 @@ export function Analytics() {
   ];
 
   const regionData = [
-    { name: 'Ashanti', value: 35, color: '#10b981' },
+    { name: 'Ashanti', value: 35, color: '#2563eb' },
     { name: 'Eastern', value: 28, color: '#3b82f6' },
-    { name: 'Central', value: 20, color: '#f59e0b' },
-    { name: 'Western', value: 17, color: '#8b5cf6' }
+    { name: 'Central', value: 20, color: '#60a5fa' },
+    { name: 'Western', value: 17, color: '#93c5fd' }
   ];
 
   const trendData = [
@@ -42,14 +42,14 @@ export function Analytics() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
                   <BarChart3 className="w-6 h-6 text-white" />
                 </div>
                 <div>
@@ -65,7 +65,7 @@ export function Analytics() {
                 <Filter className="w-4 h-4 mr-2" />
                 Filters
               </Button>
-              <Button size="sm" className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700">
+              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
                 <Download className="w-4 h-4 mr-2" />
                 Export Report
               </Button>
@@ -79,14 +79,14 @@ export function Analytics() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             { title: "Total Submissions", value: "12,450", change: "+12.5%", icon: Activity, color: "blue", trend: "up" },
-            { title: "Approval Rate", value: "87.2%", change: "+2.1%", icon: Target, color: "green", trend: "up" },
-            { title: "Active Officers", value: "156", change: "+8", icon: Users, color: "purple", trend: "up" },
-            { title: "Coverage Areas", value: "89", change: "-2", icon: MapPin, color: "orange", trend: "down" }
+            { title: "Approval Rate", value: "87.2%", change: "+2.1%", icon: Target, color: "blue", trend: "up" },
+            { title: "Active Officers", value: "156", change: "+8", icon: Users, color: "blue", trend: "up" },
+            { title: "Coverage Areas", value: "89", change: "-2", icon: MapPin, color: "blue", trend: "down" }
           ].map((metric, index) => (
             <Card key={index} className="bg-white/70 backdrop-blur-sm border-slate-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
-                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r from-${metric.color}-500 to-${metric.color}-600 flex items-center justify-center shadow-lg`}>
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-lg`}>
                     <metric.icon className="w-6 h-6 text-white" />
                   </div>
                   <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
@@ -144,7 +144,7 @@ export function Analytics() {
           <Card className="bg-white/70 backdrop-blur-sm border-slate-200/50 shadow-xl">
             <CardHeader className="pb-4">
               <CardTitle className="flex items-center gap-2 text-slate-800">
-                <MapPin className="w-5 h-5 text-purple-600" />
+                <MapPin className="w-5 h-5 text-blue-600" />
                 Regional Distribution
               </CardTitle>
               <CardDescription className="text-slate-600">
@@ -192,7 +192,7 @@ export function Analytics() {
         <Card className="bg-white/70 backdrop-blur-sm border-slate-200/50 shadow-xl">
           <CardHeader className="pb-4">
             <CardTitle className="flex items-center gap-2 text-slate-800">
-              <Calendar className="w-5 h-5 text-green-600" />
+              <Calendar className="w-5 h-5 text-blue-600" />
               Weekly Activity Trends
             </CardTitle>
             <CardDescription className="text-slate-600">
@@ -213,9 +213,9 @@ export function Analytics() {
                     boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)'
                   }}
                 />
-                <Line type="monotone" dataKey="photos" stroke="#10b981" strokeWidth={3} dot={{ fill: '#10b981', strokeWidth: 2, r: 6 }} />
+                <Line type="monotone" dataKey="photos" stroke="#2563eb" strokeWidth={3} dot={{ fill: '#2563eb', strokeWidth: 2, r: 6 }} />
                 <Line type="monotone" dataKey="videos" stroke="#3b82f6" strokeWidth={3} dot={{ fill: '#3b82f6', strokeWidth: 2, r: 6 }} />
-                <Line type="monotone" dataKey="reports" stroke="#f59e0b" strokeWidth={3} dot={{ fill: '#f59e0b', strokeWidth: 2, r: 6 }} />
+                <Line type="monotone" dataKey="reports" stroke="#60a5fa" strokeWidth={3} dot={{ fill: '#60a5fa', strokeWidth: 2, r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>

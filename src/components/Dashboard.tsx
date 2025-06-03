@@ -27,19 +27,19 @@ import { MapWidget } from "@/components/dashboard/MapWidget";
 
 export function Dashboard() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen">
       {/* Enhanced Header */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
                   <BarChart3 className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                    FARMETRICS Dashboard
+                    Dashboard Overview
                   </h1>
                   <p className="text-slate-600 font-medium">Real-time field data monitoring and analytics</p>
                 </div>
@@ -54,7 +54,7 @@ export function Dashboard() {
                 <Download className="w-4 h-4 mr-2" />
                 Export Data
               </Button>
-              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Sync Data
               </Button>
@@ -116,7 +116,7 @@ export function Dashboard() {
                     time: "15 min ago",
                     status: "approved",
                     location: "Eastern Region",
-                    color: "green"
+                    color: "blue"
                   },
                   {
                     type: "report",
@@ -125,7 +125,7 @@ export function Dashboard() {
                     time: "1 hr ago",
                     status: "pending_review",
                     location: "Central Region",
-                    color: "purple"
+                    color: "blue"
                   },
                   {
                     type: "video",
@@ -134,12 +134,12 @@ export function Dashboard() {
                     time: "2 hrs ago",
                     status: "approved",
                     location: "Western Region",
-                    color: "orange"
+                    color: "blue"
                   }
                 ].map((submission, index) => (
                   <div key={index} className="group p-4 rounded-xl bg-white/70 border border-slate-200/50 hover:bg-white hover:shadow-md transition-all duration-200">
                     <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-r from-${submission.color}-500 to-${submission.color}-600 flex items-center justify-center shadow-sm`}>
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-sm`}>
                         {submission.type === 'photo' && <Image className="w-5 h-5 text-white" />}
                         {submission.type === 'polygon' && <Map className="w-5 h-5 text-white" />}
                         {submission.type === 'report' && <FileText className="w-5 h-5 text-white" />}

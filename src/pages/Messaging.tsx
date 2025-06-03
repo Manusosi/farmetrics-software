@@ -8,63 +8,53 @@ import {
   MessageSquare, 
   Send, 
   Search, 
-  Filter, 
   Users, 
-  Bell,
-  Clock,
-  CheckCircle,
-  AlertCircle,
+  Clock, 
   Plus,
+  Filter,
   MoreVertical,
-  Star,
-  Archive
+  Phone,
+  Video,
+  Paperclip
 } from "lucide-react";
 
 export function Messaging() {
   const conversations = [
     {
       id: 1,
-      name: "John Doe",
-      role: "Field Officer",
-      region: "Ashanti",
-      lastMessage: "Photos from today's farm visit uploaded successfully",
-      timestamp: "2 min ago",
-      unread: 2,
-      status: "online",
-      priority: "normal"
+      name: "Field Team Alpha",
+      lastMessage: "Cocoa farm data collection completed",
+      time: "2 min ago",
+      unread: 3,
+      type: "group",
+      participants: 8
     },
     {
       id: 2,
-      name: "Mary Johnson",
-      role: "Supervisor",
-      region: "Eastern",
-      lastMessage: "Weekly report review completed. Need clarification on polygon boundaries.",
-      timestamp: "15 min ago",
-      unread: 1,
-      status: "away",
-      priority: "high"
+      name: "John Doe",
+      lastMessage: "Photos uploaded successfully",
+      time: "15 min ago",
+      unread: 0,
+      type: "direct",
+      status: "online"
     },
     {
       id: 3,
-      name: "David Smith",
-      role: "Field Officer",
-      region: "Central",
-      lastMessage: "Equipment maintenance scheduled for tomorrow",
-      timestamp: "1 hr ago",
-      unread: 0,
-      status: "offline",
-      priority: "normal"
+      name: "Regional Supervisors",
+      lastMessage: "Weekly report discussion",
+      time: "1 hr ago",
+      unread: 1,
+      type: "group",
+      participants: 12
     },
     {
       id: 4,
-      name: "Sarah Wilson",
-      role: "Team Lead",
-      region: "Western",
-      lastMessage: "Great work on the recent submissions! Keep it up.",
-      timestamp: "3 hrs ago",
+      name: "Mary Johnson",
+      lastMessage: "Need clarification on boundary mapping",
+      time: "3 hrs ago",
       unread: 0,
-      status: "online",
-      priority: "normal"
+      type: "direct",
+      status: "away"
     }
   ];
 
@@ -72,52 +62,58 @@ export function Messaging() {
     {
       id: 1,
       sender: "John Doe",
-      content: "Photos from today's farm visit uploaded successfully",
-      timestamp: "2:34 PM",
-      type: "received",
-      attachments: ["farm_visit_photos.zip"]
+      content: "I've completed the data collection for the Ashanti region farms. All photos and GPS coordinates have been uploaded.",
+      time: "10:30 AM",
+      isOwn: false
     },
     {
       id: 2,
       sender: "You",
-      content: "Great work! I'll review them shortly. Any issues with the GPS coordinates?",
-      timestamp: "2:35 PM",
-      type: "sent"
+      content: "Great work! How many farms were covered today?",
+      time: "10:32 AM",
+      isOwn: true
     },
     {
       id: 3,
       sender: "John Doe",
-      content: "No issues with GPS. All locations were captured accurately. Also submitted polygon data for 3 new farms.",
-      timestamp: "2:36 PM",
-      type: "received"
+      content: "We covered 15 farms today. Also found 3 farms that need boundary updates.",
+      time: "10:35 AM",
+      isOwn: false
+    },
+    {
+      id: 4,
+      sender: "You",
+      content: "Perfect. Please create a priority list for the boundary updates and we'll schedule them for next week.",
+      time: "10:38 AM",
+      isOwn: true
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             <div className="space-y-1">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-xl flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
                   <MessageSquare className="w-6 h-6 text-white" />
                 </div>
                 <div>
                   <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                    Messaging Center
+                    Team Communication
                   </h1>
-                  <p className="text-slate-600 font-medium">Communicate with field teams and supervisors</p>
+                  <p className="text-slate-600 font-medium">Coordinate with field officers and supervisors</p>
                 </div>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Button variant="outline" size="sm" className="bg-white/70 border-slate-300 hover:bg-white">
-                <Filter className="w-4 h-4 mr-2" />
-                Filter
+                <Users className="w-4 h-4 mr-2" />
+                Manage Teams
               </Button>
-              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700">
+              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
                 <Plus className="w-4 h-4 mr-2" />
                 New Message
               </Button>
@@ -127,64 +123,47 @@ export function Messaging() {
       </div>
 
       <div className="p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[calc(100vh-200px)]">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 h-[800px]">
           {/* Conversations List */}
           <div className="lg:col-span-1">
-            <Card className="h-full bg-white/70 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <Card className="bg-white/70 backdrop-blur-sm border-slate-200/50 shadow-xl h-full">
               <CardHeader className="pb-4">
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2 text-slate-800">
-                    <Users className="w-5 h-5 text-blue-600" />
-                    Conversations
-                  </CardTitle>
-                  <Badge variant="secondary" className="bg-blue-100 text-blue-700">
-                    {conversations.filter(c => c.unread > 0).length} unread
-                  </Badge>
-                </div>
+                <CardTitle className="flex items-center gap-2 text-slate-800">
+                  <MessageSquare className="w-5 h-5 text-blue-600" />
+                  Conversations
+                </CardTitle>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input 
-                    placeholder="Search conversations..." 
-                    className="pl-10 bg-white/50 border-slate-300"
-                  />
+                  <Search className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+                  <Input placeholder="Search conversations..." className="pl-10" />
                 </div>
               </CardHeader>
-              <CardContent className="p-0 overflow-auto">
-                <div className="space-y-1">
+              <CardContent className="p-0">
+                <div className="space-y-2 p-4">
                   {conversations.map((conversation) => (
-                    <div 
-                      key={conversation.id}
-                      className="p-4 border-b border-slate-200/50 hover:bg-white/50 cursor-pointer transition-all duration-200"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="relative">
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                              {conversation.name.split(' ').map(n => n[0]).join('')}
-                            </div>
-                            <div className={`absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white ${
-                              conversation.status === 'online' ? 'bg-green-500' : 
-                              conversation.status === 'away' ? 'bg-yellow-500' : 'bg-gray-400'
-                            }`} />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                              <h4 className="font-semibold text-slate-900 truncate">{conversation.name}</h4>
-                              {conversation.priority === 'high' && (
-                                <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                              )}
-                            </div>
-                            <p className="text-sm text-slate-600">{conversation.role} • {conversation.region}</p>
-                            <p className="text-sm text-slate-700 truncate mt-1">{conversation.lastMessage}</p>
-                          </div>
+                    <div key={conversation.id} className="p-4 rounded-xl hover:bg-blue-50 cursor-pointer transition-colors border border-transparent hover:border-blue-200">
+                      <div className="flex items-start gap-3">
+                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                          {conversation.type === 'group' ? 
+                            <Users className="w-6 h-6 text-white" /> : 
+                            <span className="text-white font-semibold">{conversation.name.split(' ').map(n => n[0]).join('')}</span>
+                          }
                         </div>
-                        <div className="flex flex-col items-end gap-1">
-                          <span className="text-xs text-slate-500">{conversation.timestamp}</span>
-                          {conversation.unread > 0 && (
-                            <Badge className="bg-blue-600 text-white text-xs px-2 py-1">
-                              {conversation.unread}
-                            </Badge>
-                          )}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="font-semibold text-slate-800 truncate">{conversation.name}</span>
+                            {conversation.unread > 0 && (
+                              <Badge className="bg-blue-600 text-white text-xs">
+                                {conversation.unread}
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-slate-600 truncate">{conversation.lastMessage}</p>
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-xs text-slate-500">{conversation.time}</span>
+                            {conversation.type === 'group' && (
+                              <span className="text-xs text-slate-500">{conversation.participants} members</span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -195,28 +174,28 @@ export function Messaging() {
           </div>
 
           {/* Chat Interface */}
-          <div className="lg:col-span-2">
-            <Card className="h-full bg-white/70 backdrop-blur-sm border-slate-200/50 shadow-xl flex flex-col">
+          <div className="lg:col-span-3">
+            <Card className="bg-white/70 backdrop-blur-sm border-slate-200/50 shadow-xl h-full flex flex-col">
               {/* Chat Header */}
-              <CardHeader className="pb-4 border-b border-slate-200/50">
+              <CardHeader className="border-b border-slate-200/50 flex-shrink-0">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                      JD
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                      <span className="text-white font-semibold">JD</span>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-slate-900">John Doe</h3>
-                      <p className="text-sm text-slate-600">Field Officer • Ashanti Region</p>
+                      <h3 className="font-semibold text-slate-800">John Doe</h3>
+                      <p className="text-sm text-green-600">Online • Field Officer</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm">
-                      <Bell className="w-4 h-4" />
+                    <Button variant="outline" size="sm">
+                      <Phone className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="sm">
-                      <Archive className="w-4 h-4" />
+                    <Button variant="outline" size="sm">
+                      <Video className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="outline" size="sm">
                       <MoreVertical className="w-4 h-4" />
                     </Button>
                   </div>
@@ -224,36 +203,24 @@ export function Messaging() {
               </CardHeader>
 
               {/* Messages */}
-              <CardContent className="flex-1 p-6 overflow-auto">
+              <CardContent className="flex-1 p-6 overflow-y-auto">
                 <div className="space-y-4">
                   {messages.map((message) => (
-                    <div 
-                      key={message.id}
-                      className={`flex ${message.type === 'sent' ? 'justify-end' : 'justify-start'}`}
-                    >
+                    <div key={message.id} className={`flex ${message.isOwn ? 'justify-end' : 'justify-start'}`}>
                       <div className={`max-w-xs lg:max-w-md px-4 py-3 rounded-2xl ${
-                        message.type === 'sent' 
-                          ? 'bg-gradient-to-r from-blue-600 to-cyan-600 text-white' 
-                          : 'bg-white/80 border border-slate-200 text-slate-900'
+                        message.isOwn 
+                          ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white' 
+                          : 'bg-white border border-slate-200 shadow-sm'
                       }`}>
-                        <p className="text-sm">{message.content}</p>
-                        {message.attachments && (
-                          <div className="mt-2">
-                            {message.attachments.map((attachment, idx) => (
-                              <div key={idx} className="text-xs opacity-80 flex items-center gap-1">
-                                <AlertCircle className="w-3 h-3" />
-                                {attachment}
-                              </div>
-                            ))}
-                          </div>
+                        {!message.isOwn && (
+                          <p className="text-xs font-semibold text-blue-600 mb-1">{message.sender}</p>
                         )}
-                        <div className={`text-xs mt-2 flex items-center gap-1 ${
-                          message.type === 'sent' ? 'text-blue-100' : 'text-slate-500'
-                        }`}>
-                          <Clock className="w-3 h-3" />
-                          {message.timestamp}
-                          {message.type === 'sent' && <CheckCircle className="w-3 h-3" />}
-                        </div>
+                        <p className={`text-sm ${message.isOwn ? 'text-white' : 'text-slate-700'}`}>
+                          {message.content}
+                        </p>
+                        <p className={`text-xs mt-2 ${message.isOwn ? 'text-blue-100' : 'text-slate-500'}`}>
+                          {message.time}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -261,19 +228,19 @@ export function Messaging() {
               </CardContent>
 
               {/* Message Input */}
-              <div className="p-6 border-t border-slate-200/50">
-                <div className="flex items-end gap-3">
-                  <div className="flex-1">
+              <div className="border-t border-slate-200/50 p-4 flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <Button variant="outline" size="sm">
+                    <Paperclip className="w-4 h-4" />
+                  </Button>
+                  <div className="flex-1 relative">
                     <Textarea 
-                      placeholder="Type your message..."
-                      className="min-h-[40px] max-h-[120px] bg-white/50 border-slate-300 resize-none"
+                      placeholder="Type your message..." 
+                      className="resize-none pr-12"
                       rows={1}
                     />
                   </div>
-                  <Button 
-                    size="sm" 
-                    className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 px-6"
-                  >
+                  <Button size="sm" className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800">
                     <Send className="w-4 h-4" />
                   </Button>
                 </div>
