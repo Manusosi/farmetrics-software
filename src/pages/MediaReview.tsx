@@ -14,7 +14,11 @@ import {
   XCircle,
   Clock,
   MapPin,
-  Calendar
+  Calendar,
+  Play,
+  FileImage,
+  Zap,
+  AlertTriangle
 } from "lucide-react";
 
 export function MediaReview() {
@@ -30,7 +34,8 @@ export function MediaReview() {
       status: "pending",
       fileSize: "2.4 MB",
       resolution: "1920x1080",
-      description: "Healthy cocoa tree with mature pods"
+      description: "Healthy cocoa tree with mature pods",
+      quality: "high"
     },
     {
       id: 2,
@@ -43,7 +48,8 @@ export function MediaReview() {
       status: "approved",
       fileSize: "12.8 MB",
       resolution: "1080p",
-      description: "Field condition assessment after rain"
+      description: "Field condition assessment after rain",
+      quality: "high"
     },
     {
       id: 3,
@@ -56,7 +62,8 @@ export function MediaReview() {
       status: "flagged",
       fileSize: "1.8 MB",
       resolution: "1920x1080",
-      description: "Evidence of pest damage on cocoa pods"
+      description: "Evidence of pest damage on cocoa pods",
+      quality: "medium"
     },
     {
       id: 4,
@@ -69,180 +76,232 @@ export function MediaReview() {
       status: "approved",
       fileSize: "3.1 MB",
       resolution: "1920x1080",
-      description: "Ripe cocoa pods ready for harvest"
+      description: "Ripe cocoa pods ready for harvest",
+      quality: "high"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Media Review</h1>
-            <p className="text-gray-600 mt-1">Review and manage photos and videos from field officers</p>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline">
-              <Download className="w-4 h-4 mr-2" />
-              Export Selected
-            </Button>
-            <Button variant="outline">
-              <Filter className="w-4 h-4 mr-2" />
-              Advanced Filters
-            </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Enhanced Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
+        <div className="px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl flex items-center justify-center">
+                  <FileImage className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                    Media Review Center
+                  </h1>
+                  <p className="text-slate-600 font-medium">Review and manage field documentation</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <Button variant="outline" className="bg-white/50 hover:bg-white">
+                <Download className="w-4 h-4 mr-2" />
+                Bulk Export
+              </Button>
+              <Button variant="outline" className="bg-white/50 hover:bg-white">
+                <Filter className="w-4 h-4 mr-2" />
+                Advanced Filters
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Total Media Files</p>
-                <p className="text-2xl font-bold">8,439</p>
+      <div className="p-8 space-y-8">
+        {/* Enhanced Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Total Media</p>
+                  <p className="text-3xl font-bold text-slate-900">8,439</p>
+                  <p className="text-xs text-blue-600 font-medium mt-1">+127 today</p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                  <Image className="w-6 h-6 text-white" />
+                </div>
               </div>
-              <Image className="w-8 h-8 text-blue-500" />
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Pending Review</p>
+                  <p className="text-3xl font-bold text-yellow-600">45</p>
+                  <p className="text-xs text-yellow-600 font-medium mt-1">Requires attention</p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center">
+                  <Clock className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Approved Today</p>
+                  <p className="text-3xl font-bold text-emerald-600">127</p>
+                  <p className="text-xs text-emerald-600 font-medium mt-1">96% approval rate</p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Flagged Items</p>
+                  <p className="text-3xl font-bold text-red-600">8</p>
+                  <p className="text-xs text-red-600 font-medium mt-1">Quality issues</p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center">
+                  <AlertTriangle className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Enhanced Search */}
+        <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <Input 
+                  placeholder="Search by filename, officer, or location..." 
+                  className="pl-10 bg-white/70 border-slate-300 focus:bg-white"
+                />
+              </div>
+              <Button variant="outline" className="bg-white/50 hover:bg-white">Media Type</Button>
+              <Button variant="outline" className="bg-white/50 hover:bg-white">Status</Button>
+              <Button variant="outline" className="bg-white/50 hover:bg-white">Date Range</Button>
+              <Button variant="outline" className="bg-white/50 hover:bg-white">Quality</Button>
             </div>
           </CardContent>
         </Card>
-        <Card>
+
+        {/* Enhanced Media Grid */}
+        <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-xl text-slate-800">Media Submissions</CardTitle>
+            <CardDescription className="text-slate-600">
+              Review and approve field documentation from officers
+            </CardDescription>
+          </CardHeader>
           <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Pending Review</p>
-                <p className="text-2xl font-bold text-yellow-600">45</p>
-              </div>
-              <Clock className="w-8 h-8 text-yellow-500" />
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+              {mediaSubmissions.map((media) => (
+                <div key={media.id} className="group p-6 border border-slate-200/50 rounded-2xl bg-white/70 hover:bg-white hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${
+                        media.type === 'photo' 
+                          ? 'bg-gradient-to-r from-blue-500 to-blue-600' 
+                          : 'bg-gradient-to-r from-purple-500 to-purple-600'
+                      }`}>
+                        {media.type === 'photo' ? 
+                          <Image className="w-6 h-6 text-white" /> : 
+                          <Video className="w-6 h-6 text-white" />
+                        }
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-slate-900">{media.filename}</h3>
+                        <p className="text-sm font-medium text-slate-600">{media.officer}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge 
+                        variant={media.quality === 'high' ? 'default' : 'secondary'}
+                        className="text-xs"
+                      >
+                        {media.quality} quality
+                      </Badge>
+                      <Badge 
+                        variant={
+                          media.status === 'approved' ? 'default' :
+                          media.status === 'pending' ? 'secondary' :
+                          'destructive'
+                        }
+                        className="capitalize"
+                      >
+                        {media.status}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-100 rounded-xl h-48 mb-4 flex items-center justify-center relative overflow-hidden group-hover:bg-slate-50 transition-colors">
+                    <div className="text-center text-slate-500">
+                      {media.type === 'photo' ? 
+                        <Image className="w-16 h-16 mx-auto mb-3 text-slate-400" /> : 
+                        <div className="relative">
+                          <Video className="w-16 h-16 mx-auto mb-3 text-slate-400" />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Play className="w-8 h-8 text-slate-600" />
+                          </div>
+                        </div>
+                      }
+                      <p className="text-sm font-medium">Media Preview</p>
+                      <p className="text-xs text-slate-400">{media.resolution} • {media.fileSize}</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 mb-4">
+                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                      <MapPin className="w-4 h-4 text-slate-400" />
+                      <span>{media.location}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                      <Calendar className="w-4 h-4 text-slate-400" />
+                      <span>{media.timestamp}</span>
+                    </div>
+                    <p className="text-sm text-slate-700 bg-slate-50 p-3 rounded-lg">{media.description}</p>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <Button variant="outline" size="sm" className="bg-white/50 hover:bg-white">
+                      <Eye className="w-4 h-4 mr-2" />
+                      View Details
+                    </Button>
+                    <div className="flex gap-2">
+                      <Button size="sm" className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white">
+                        <CheckCircle className="w-4 h-4 mr-1" />
+                        Approve
+                      </Button>
+                      <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
+                        <XCircle className="w-4 h-4 mr-1" />
+                        Reject
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Approved Today</p>
-                <p className="text-2xl font-bold text-green-600">127</p>
-              </div>
-              <CheckCircle className="w-8 h-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Flagged Items</p>
-                <p className="text-2xl font-bold text-red-600">8</p>
-              </div>
-              <XCircle className="w-8 h-8 text-red-500" />
+
+            <div className="mt-8 flex items-center justify-center">
+              <Button variant="outline" className="bg-white/50 hover:bg-white">
+                Load More Media Files
+              </Button>
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Search and Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input 
-                placeholder="Search by filename, officer, or location..." 
-                className="pl-10"
-              />
-            </div>
-            <Button variant="outline">Filter by Type</Button>
-            <Button variant="outline">Filter by Status</Button>
-            <Button variant="outline">Filter by Date</Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Media Grid */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Media Submissions</CardTitle>
-          <CardDescription>Review incoming photos and videos from field officers</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {mediaSubmissions.map((media) => (
-              <div key={media.id} className="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                      media.type === 'photo' ? 'bg-blue-100' : 'bg-purple-100'
-                    }`}>
-                      {media.type === 'photo' ? 
-                        <Image className="w-5 h-5 text-blue-600" /> : 
-                        <Video className="w-5 h-5 text-purple-600" />
-                      }
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{media.filename}</h3>
-                      <p className="text-sm text-gray-600">{media.officer}</p>
-                    </div>
-                  </div>
-                  <Badge variant={
-                    media.status === 'approved' ? 'default' :
-                    media.status === 'pending' ? 'secondary' :
-                    'destructive'
-                  }>
-                    {media.status}
-                  </Badge>
-                </div>
-
-                <div className="bg-gray-100 rounded-lg h-48 mb-4 flex items-center justify-center">
-                  <div className="text-center text-gray-500">
-                    {media.type === 'photo' ? 
-                      <Image className="w-12 h-12 mx-auto mb-2" /> : 
-                      <Video className="w-12 h-12 mx-auto mb-2" />
-                    }
-                    <p className="text-sm">Media Preview</p>
-                    <p className="text-xs">{media.resolution} • {media.fileSize}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <MapPin className="w-4 h-4" />
-                    <span>{media.location}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <Calendar className="w-4 h-4" />
-                    <span>{media.timestamp}</span>
-                  </div>
-                  <p className="text-sm text-gray-700">{media.description}</p>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <Button variant="outline" size="sm">
-                    <Eye className="w-4 h-4 mr-2" />
-                    View Details
-                  </Button>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="text-green-600 border-green-200 hover:bg-green-50">
-                      <CheckCircle className="w-4 h-4 mr-1" />
-                      Approve
-                    </Button>
-                    <Button size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50">
-                      <XCircle className="w-4 h-4 mr-1" />
-                      Reject
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-6 flex items-center justify-center">
-            <Button variant="outline">Load More Media</Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

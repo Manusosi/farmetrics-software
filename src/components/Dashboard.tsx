@@ -13,7 +13,12 @@ import {
   Download,
   RefreshCw,
   FileText,
-  Database
+  Database,
+  Activity,
+  BarChart3,
+  MapPin,
+  Bell,
+  Settings
 } from "lucide-react";
 import { MetricsCards } from "@/components/dashboard/MetricsCards";
 import { ActivityChart } from "@/components/dashboard/ActivityChart";
@@ -22,125 +27,151 @@ import { MapWidget } from "@/components/dashboard/MapWidget";
 
 export function Dashboard() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-gray-600">Monitor and manage field data collected by mobile officers</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm">
-              <Download className="w-4 h-4 mr-2" />
-              Export Data
-            </Button>
-            <Button size="sm">
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Sync Mobile Data
-            </Button>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Enhanced Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
+        <div className="px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                    FARMETRICS Dashboard
+                  </h1>
+                  <p className="text-slate-600 font-medium">Real-time field data monitoring and analytics</p>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" size="sm" className="bg-white/50 border-slate-300 hover:bg-white">
+                <Bell className="w-4 h-4 mr-2" />
+                Notifications
+              </Button>
+              <Button variant="outline" size="sm" className="bg-white/50 border-slate-300 hover:bg-white">
+                <Download className="w-4 h-4 mr-2" />
+                Export Data
+              </Button>
+              <Button size="sm" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Sync Data
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="p-6 space-y-6">
-        {/* Key Metrics */}
-        <MetricsCards />
-
-        {/* Charts and Status */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ActivityChart />
-          <SyncStatus />
+      <div className="p-8 space-y-8">
+        {/* Enhanced Key Metrics */}
+        <div className="space-y-2">
+          <h2 className="text-xl font-semibold text-slate-800">System Overview</h2>
+          <MetricsCards />
         </div>
 
-        {/* Map Widget */}
-        <MapWidget />
+        {/* Charts and Analytics Section */}
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+          <div className="xl:col-span-2">
+            <ActivityChart />
+          </div>
+          <div className="xl:col-span-1">
+            <SyncStatus />
+          </div>
+        </div>
 
-        {/* Recent Data Submissions */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Database className="w-5 h-5" />
-              Recent Field Data Submissions
-            </CardTitle>
-            <CardDescription>
-              Latest data received from field officers via mobile app
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {[
-                {
-                  type: "photo",
-                  officer: "John Doe",
-                  action: "Submitted 15 cocoa tree photos from Farm A-23",
-                  time: "2 minutes ago",
-                  status: "pending_review",
-                  location: "Ashanti Region"
-                },
-                {
-                  type: "polygon",
-                  officer: "Mary Johnson",
-                  action: "Uploaded farm boundary polygon for Region B",
-                  time: "15 minutes ago",
-                  status: "approved",
-                  location: "Eastern Region"
-                },
-                {
-                  type: "report",
-                  officer: "David Smith",
-                  action: "Submitted supervisor assessment report",
-                  time: "1 hour ago",
-                  status: "pending_review",
-                  location: "Central Region"
-                },
-                {
-                  type: "video",
-                  officer: "Sarah Wilson",
-                  action: "Uploaded field condition video documentation",
-                  time: "2 hours ago",
-                  status: "approved",
-                  location: "Western Region"
-                }
-              ].map((submission, index) => (
-                <div key={index} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
-                  <div className={`w-2 h-2 rounded-full mt-2 ${
-                    submission.status === 'approved' ? 'bg-green-500' :
-                    submission.status === 'pending_review' ? 'bg-yellow-500' :
-                    'bg-red-500'
-                  }`} />
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-gray-900">{submission.officer}</span>
-                      <span className="text-sm text-gray-500">• {submission.location}</span>
+        {/* Map and Recent Activity */}
+        <div className="grid grid-cols-1 xl:grid-cols-5 gap-8">
+          <div className="xl:col-span-3">
+            <MapWidget />
+          </div>
+          <div className="xl:col-span-2">
+            {/* Recent Data Submissions */}
+            <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+              <CardHeader className="pb-4">
+                <CardTitle className="flex items-center gap-2 text-slate-800">
+                  <Activity className="w-5 h-5 text-blue-600" />
+                  Live Activity Feed
+                </CardTitle>
+                <CardDescription className="text-slate-600">
+                  Real-time field data submissions
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {[
+                  {
+                    type: "photo",
+                    officer: "John Doe",
+                    action: "Submitted 15 cocoa tree photos",
+                    time: "2 min ago",
+                    status: "pending_review",
+                    location: "Ashanti Region",
+                    color: "blue"
+                  },
+                  {
+                    type: "polygon",
+                    officer: "Mary Johnson",
+                    action: "Updated farm boundary data",
+                    time: "15 min ago",
+                    status: "approved",
+                    location: "Eastern Region",
+                    color: "green"
+                  },
+                  {
+                    type: "report",
+                    officer: "David Smith",
+                    action: "Completed field assessment",
+                    time: "1 hr ago",
+                    status: "pending_review",
+                    location: "Central Region",
+                    color: "purple"
+                  },
+                  {
+                    type: "video",
+                    officer: "Sarah Wilson",
+                    action: "Recorded field conditions",
+                    time: "2 hrs ago",
+                    status: "approved",
+                    location: "Western Region",
+                    color: "orange"
+                  }
+                ].map((submission, index) => (
+                  <div key={index} className="group p-4 rounded-xl bg-white/70 border border-slate-200/50 hover:bg-white hover:shadow-md transition-all duration-200">
+                    <div className="flex items-start gap-3">
+                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-r from-${submission.color}-500 to-${submission.color}-600 flex items-center justify-center shadow-sm`}>
+                        {submission.type === 'photo' && <Image className="w-5 h-5 text-white" />}
+                        {submission.type === 'polygon' && <Map className="w-5 h-5 text-white" />}
+                        {submission.type === 'report' && <FileText className="w-5 h-5 text-white" />}
+                        {submission.type === 'video' && <Image className="w-5 h-5 text-white" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold text-slate-800">{submission.officer}</span>
+                          <span className="text-xs text-slate-500">•</span>
+                          <span className="text-sm text-slate-600">{submission.location}</span>
+                        </div>
+                        <p className="text-sm text-slate-700 mb-2">{submission.action}</p>
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-slate-500">{submission.time}</span>
+                          <Badge 
+                            variant={submission.status === 'approved' ? 'default' : 'secondary'}
+                            className="text-xs"
+                          >
+                            {submission.status.replace('_', ' ')}
+                          </Badge>
+                        </div>
+                      </div>
                     </div>
-                    <div className="text-gray-600">{submission.action}</div>
-                    <div className="text-sm text-gray-500">{submission.time}</div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    {submission.type === 'photo' && <Image className="w-4 h-4 text-blue-500" />}
-                    {submission.type === 'polygon' && <Map className="w-4 h-4 text-green-500" />}
-                    {submission.type === 'report' && <FileText className="w-4 h-4 text-purple-500" />}
-                    {submission.type === 'video' && <Image className="w-4 h-4 text-red-500" />}
-                    <Badge variant={
-                      submission.status === 'approved' ? 'default' :
-                      submission.status === 'pending_review' ? 'secondary' :
-                      'destructive'
-                    }>
-                      {submission.status.replace('_', ' ')}
-                    </Badge>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 pt-4 border-t border-gray-100">
-              <Button variant="outline" className="w-full">
-                View All Submissions
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+                <Button variant="outline" className="w-full mt-4 bg-white/50 hover:bg-white">
+                  View All Activities
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </div>
     </div>
   );

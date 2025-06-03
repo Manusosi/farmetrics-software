@@ -5,110 +5,70 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Map, 
   MapPin, 
-  Maximize2,
-  Filter,
-  Eye,
-  Camera,
-  Video
+  Maximize2, 
+  Activity,
+  Users,
+  Satellite,
+  Navigation
 } from "lucide-react";
 
 export function MapWidget() {
-  // Mock data for recent geolocated submissions
-  const recentSubmissions = [
-    {
-      id: 1,
-      location: "Farm A-23, Ashanti Region",
-      coordinates: "6.6885°N, 1.6244°W",
-      officer: "John Doe",
-      type: "Photo",
-      count: 15,
-      time: "2 min ago"
-    },
-    {
-      id: 2,
-      location: "Farm B-15, Eastern Region", 
-      coordinates: "6.1056°N, 0.2712°W",
-      officer: "Mary Johnson",
-      type: "Polygon",
-      count: 1,
-      time: "15 min ago"
-    },
-    {
-      id: 3,
-      location: "Farm C-08, Central Region",
-      coordinates: "5.5557°N, 0.2012°W",
-      officer: "David Smith",
-      type: "Video",
-      count: 3,
-      time: "1 hour ago"
-    }
+  const regionData = [
+    { name: "Ashanti Region", officers: 8, farms: 342, status: "active", color: "emerald" },
+    { name: "Eastern Region", officers: 6, farms: 267, status: "active", color: "blue" },
+    { name: "Central Region", officers: 5, farms: 189, status: "active", color: "purple" },
+    { name: "Western Region", officers: 7, farms: 423, status: "active", color: "orange" },
   ];
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <Map className="w-5 h-5" />
-              Field Data Geographic Overview
-            </CardTitle>
-            <CardDescription>
-              Real-time view of geolocated submissions from field officers
-            </CardDescription>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm">
-              <Filter className="w-4 h-4 mr-2" />
-              Filter Data
-            </Button>
-            <Button variant="outline" size="sm">
+    <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+      <CardHeader className="pb-4">
+        <CardTitle className="flex items-center gap-2 text-slate-800">
+          <Navigation className="w-5 h-5 text-green-600" />
+          Regional Coverage Map
+        </CardTitle>
+        <CardDescription className="text-slate-600">
+          Real-time officer locations and farm distribution across Ghana
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="p-6">
+        <div className="bg-gradient-to-br from-green-100 via-blue-100 to-emerald-100 rounded-2xl h-80 flex items-center justify-center border-2 border-dashed border-green-300 mb-6 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-green-200/30 to-blue-200/30" />
+          <div className="text-center text-slate-600 z-10">
+            <div className="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Map className="w-10 h-10 text-white" />
+            </div>
+            <p className="font-bold text-lg text-slate-800 mb-2">Interactive Regional Map</p>
+            <p className="text-sm mb-4 text-slate-600">Live officer tracking and farm coverage visualization</p>
+            <Button className="bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700">
               <Maximize2 className="w-4 h-4 mr-2" />
-              Full Map View
+              Launch Full Map
             </Button>
           </div>
         </div>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Map Placeholder */}
-          <div className="bg-gray-100 rounded-lg h-64 flex items-center justify-center border-2 border-dashed border-gray-300">
-            <div className="text-center text-gray-500">
-              <Map className="w-12 h-12 mx-auto mb-2" />
-              <p className="font-medium">Interactive Field Data Map</p>
-              <p className="text-sm">Farm polygons and submission locations</p>
-              <Button variant="outline" size="sm" className="mt-2">
-                <Eye className="w-4 h-4 mr-2" />
-                Launch Map Interface
-              </Button>
+        
+        {/* Regional Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {regionData.map((region, index) => (
+            <div key={index} className="p-4 bg-white/70 rounded-xl border border-slate-200/50 hover:bg-white transition-all duration-200">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-semibold text-slate-800">{region.name}</h4>
+                <Badge variant="default" className="bg-emerald-100 text-emerald-700">
+                  {region.status}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-4 text-sm text-slate-600">
+                <span className="flex items-center gap-1">
+                  <Users className="w-3 h-3" />
+                  {region.officers} officers
+                </span>
+                <span className="flex items-center gap-1">
+                  <MapPin className="w-3 h-3" />
+                  {region.farms} farms
+                </span>
+              </div>
             </div>
-          </div>
-
-          {/* Recent Geolocated Submissions */}
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-4">Recent Geolocated Submissions</h4>
-            <div className="space-y-3">
-              {recentSubmissions.map((submission) => (
-                <div key={submission.id} className="flex items-start gap-3 p-3 rounded-lg border border-gray-100 hover:bg-gray-50 transition-colors">
-                  <MapPin className="w-5 h-5 text-green-600 mt-0.5" />
-                  <div className="flex-1">
-                    <div className="font-medium text-gray-900">{submission.location}</div>
-                    <div className="text-sm text-gray-600">{submission.coordinates}</div>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-gray-500">{submission.officer}</span>
-                      <Badge variant="secondary" className="text-xs flex items-center gap-1">
-                        {submission.type === 'Photo' && <Camera className="w-3 h-3" />}
-                        {submission.type === 'Video' && <Video className="w-3 h-3" />}
-                        {submission.type === 'Polygon' && <Map className="w-3 h-3" />}
-                        {submission.count} {submission.type}{submission.count > 1 ? 's' : ''}
-                      </Badge>
-                      <span className="text-xs text-gray-500">{submission.time}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
       </CardContent>
     </Card>

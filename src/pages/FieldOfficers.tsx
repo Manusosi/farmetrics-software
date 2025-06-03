@@ -13,7 +13,11 @@ import {
   Phone,
   Mail,
   Edit,
-  MoreHorizontal
+  MoreHorizontal,
+  Filter,
+  UserPlus,
+  Award,
+  TrendingUp
 } from "lucide-react";
 
 export function FieldOfficers() {
@@ -29,7 +33,9 @@ export function FieldOfficers() {
       lastSync: "2 minutes ago",
       totalSubmissions: 1247,
       thisWeek: 89,
-      joinDate: "Jan 2024"
+      joinDate: "Jan 2024",
+      avatar: "JD",
+      performance: 98
     },
     {
       id: 2,
@@ -42,7 +48,9 @@ export function FieldOfficers() {
       lastSync: "15 minutes ago",
       totalSubmissions: 892,
       thisWeek: 67,
-      joinDate: "Feb 2024"
+      joinDate: "Feb 2024",
+      avatar: "MJ",
+      performance: 94
     },
     {
       id: 3,
@@ -55,7 +63,9 @@ export function FieldOfficers() {
       lastSync: "3 hours ago",
       totalSubmissions: 634,
       thisWeek: 23,
-      joinDate: "Mar 2024"
+      joinDate: "Mar 2024",
+      avatar: "DS",
+      performance: 87
     },
     {
       id: 4,
@@ -68,157 +78,215 @@ export function FieldOfficers() {
       lastSync: "45 minutes ago",
       totalSubmissions: 1156,
       thisWeek: 78,
-      joinDate: "Dec 2023"
+      joinDate: "Dec 2023",
+      avatar: "SW",
+      performance: 96
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Field Officers</h1>
-            <p className="text-gray-600 mt-1">Manage field teams and monitor their activity</p>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      {/* Enhanced Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
+        <div className="px-8 py-6">
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center">
+                  <Users className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                    Field Officers
+                  </h1>
+                  <p className="text-slate-600 font-medium">Manage your field team and monitor performance</p>
+                </div>
+              </div>
+            </div>
+            <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700">
+              <UserPlus className="w-4 h-4 mr-2" />
+              Add New Officer
+            </Button>
           </div>
-          <Button>
-            <Plus className="w-4 h-4 mr-2" />
-            Add New Officer
-          </Button>
         </div>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Total Officers</p>
-                <p className="text-2xl font-bold">34</p>
+      <div className="p-8 space-y-8">
+        {/* Enhanced Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Total Officers</p>
+                  <p className="text-3xl font-bold text-slate-900">34</p>
+                  <p className="text-xs text-emerald-600 font-medium mt-1">+2 this month</p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
+                  <Users className="w-6 h-6 text-white" />
+                </div>
               </div>
-              <Users className="w-8 h-8 text-blue-500" />
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Active Today</p>
+                  <p className="text-3xl font-bold text-emerald-600">28</p>
+                  <p className="text-xs text-emerald-600 font-medium mt-1">82% online rate</p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center">
+                  <Activity className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Avg Performance</p>
+                  <p className="text-3xl font-bold text-blue-600">94%</p>
+                  <p className="text-xs text-emerald-600 font-medium mt-1">+3% vs last month</p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <Award className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-slate-600">Regions Covered</p>
+                  <p className="text-3xl font-bold text-orange-600">8</p>
+                  <p className="text-xs text-slate-500 font-medium mt-1">Nationwide coverage</p>
+                </div>
+                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
+                  <MapPin className="w-6 h-6 text-white" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Enhanced Search and Filters */}
+        <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                <Input 
+                  placeholder="Search officers by name, email, or region..." 
+                  className="pl-10 bg-white/70 border-slate-300 focus:bg-white"
+                />
+              </div>
+              <Button variant="outline" className="bg-white/50 hover:bg-white">
+                <Filter className="w-4 h-4 mr-2" />
+                Region
+              </Button>
+              <Button variant="outline" className="bg-white/50 hover:bg-white">
+                <Filter className="w-4 h-4 mr-2" />
+                Status
+              </Button>
+              <Button variant="outline" className="bg-white/50 hover:bg-white">
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Performance
+              </Button>
             </div>
           </CardContent>
         </Card>
-        <Card>
+
+        {/* Enhanced Officers Directory */}
+        <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-xl text-slate-800">Field Officers Directory</CardTitle>
+            <CardDescription className="text-slate-600">
+              Complete team overview with performance metrics and activity status
+            </CardDescription>
+          </CardHeader>
           <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Active Today</p>
-                <p className="text-2xl font-bold text-green-600">28</p>
-              </div>
-              <Activity className="w-8 h-8 text-green-500" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Inactive</p>
-                <p className="text-2xl font-bold text-red-600">6</p>
-              </div>
-              <Clock className="w-8 h-8 text-red-500" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-gray-600">Regions Covered</p>
-                <p className="text-2xl font-bold">8</p>
-              </div>
-              <MapPin className="w-8 h-8 text-purple-500" />
+            <div className="space-y-4">
+              {officers.map((officer) => (
+                <div key={officer.id} className="group p-6 border border-slate-200/50 rounded-2xl bg-white/70 hover:bg-white hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="relative">
+                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                          {officer.avatar}
+                        </div>
+                        <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white ${
+                          officer.status === 'active' ? 'bg-emerald-500' : 'bg-slate-400'
+                        }`} />
+                      </div>
+                      <div className="space-y-1">
+                        <h3 className="font-bold text-lg text-slate-900">{officer.name}</h3>
+                        <div className="flex items-center gap-4 text-sm text-slate-600">
+                          <span className="flex items-center gap-1">
+                            <Mail className="w-3 h-3" />
+                            {officer.email}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Phone className="w-3 h-3" />
+                            {officer.phone}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-4 text-sm text-slate-500">
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {officer.region} • {officer.zone}
+                          </span>
+                          <span>Joined {officer.joinDate}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-8">
+                      <div className="grid grid-cols-3 gap-6 text-center">
+                        <div>
+                          <p className="text-sm font-medium text-slate-600">Total</p>
+                          <p className="text-xl font-bold text-slate-900">{officer.totalSubmissions.toLocaleString()}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-slate-600">This Week</p>
+                          <p className="text-xl font-bold text-emerald-600">{officer.thisWeek}</p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium text-slate-600">Performance</p>
+                          <p className="text-xl font-bold text-blue-600">{officer.performance}%</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="text-center">
+                          <p className="text-sm font-medium text-slate-600">Last Sync</p>
+                          <p className="text-sm text-slate-700">{officer.lastSync}</p>
+                        </div>
+                        <Badge 
+                          variant={officer.status === 'active' ? 'default' : 'secondary'}
+                          className="capitalize"
+                        >
+                          {officer.status}
+                        </Badge>
+                        <Button variant="ghost" size="sm" className="hover:bg-slate-100">
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm" className="hover:bg-slate-100">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Search and Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex items-center gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-              <Input 
-                placeholder="Search officers by name, email, or region..." 
-                className="pl-10"
-              />
-            </div>
-            <Button variant="outline">Filter by Region</Button>
-            <Button variant="outline">Filter by Status</Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Officers Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Field Officers Directory</CardTitle>
-          <CardDescription>Complete list of field officers and their current status</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {officers.map((officer) => (
-              <div key={officer.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                    {officer.name.split(' ').map(n => n[0]).join('')}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{officer.name}</h3>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
-                      <span className="flex items-center gap-1">
-                        <Mail className="w-3 h-3" />
-                        {officer.email}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Phone className="w-3 h-3" />
-                        {officer.phone}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-4 text-sm text-gray-500 mt-1">
-                      <span className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3" />
-                        {officer.region} • {officer.zone}
-                      </span>
-                      <span>Joined {officer.joinDate}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-6">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Total Submissions</p>
-                    <p className="text-lg font-semibold">{officer.totalSubmissions.toLocaleString()}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">This Week</p>
-                    <p className="text-lg font-semibold text-green-600">{officer.thisWeek}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600">Last Sync</p>
-                    <p className="text-sm">{officer.lastSync}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={officer.status === 'active' ? 'default' : 'secondary'}>
-                      {officer.status}
-                    </Badge>
-                    <Button variant="ghost" size="sm">
-                      <Edit className="w-4 h-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

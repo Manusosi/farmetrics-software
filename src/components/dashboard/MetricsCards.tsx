@@ -1,109 +1,78 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { 
   Users, 
   Image, 
   Map, 
+  TrendingUp, 
   Activity,
-  FileText,
+  Database,
   CheckCircle,
-  Clock,
-  Database
+  Clock
 } from "lucide-react";
 
 export function MetricsCards() {
-  const metrics = [
-    {
-      title: "Data Submissions Today",
-      value: "127",
-      change: "+18%",
-      changeType: "positive" as const,
-      icon: Database,
-      description: "Photos, videos, polygons received"
-    },
-    {
-      title: "Farm Polygons Mapped",
-      value: "1,247",
-      change: "+12%",
-      changeType: "positive" as const,
-      icon: Map,
-      description: "GPS boundaries from field officers"
-    },
-    {
-      title: "Media Files Received",
-      value: "8,439",
-      change: "+23%",
-      changeType: "positive" as const,
-      icon: Image,
-      description: "Photos and videos this month"
-    },
-    {
-      title: "Active Field Officers",
-      value: "34",
-      change: "+2",
-      changeType: "positive" as const,
-      icon: Users,
-      description: "Currently submitting data"
-    },
-    {
-      title: "Pending Reviews",
-      value: "45",
-      change: "-8%",
-      changeType: "positive" as const,
-      icon: Clock,
-      description: "Submissions awaiting approval"
-    },
-    {
-      title: "Reports Submitted",
-      value: "89",
-      change: "+15%",
-      changeType: "positive" as const,
-      icon: FileText,
-      description: "Supervisor assessments this week"
-    },
-    {
-      title: "Data Quality Score",
-      value: "94%",
-      change: "+2%",
-      changeType: "positive" as const,
-      icon: CheckCircle,
-      description: "GPS accuracy & completeness"
-    },
-    {
-      title: "Sync Success Rate",
-      value: "98.7%",
-      change: "+0.3%",
-      changeType: "positive" as const,
-      icon: Activity,
-      description: "Mobile app data transfers"
-    }
-  ];
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {metrics.map((metric, index) => (
-        <Card key={index} className="border border-gray-200">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">
-              {metric.title}
-            </CardTitle>
-            <metric.icon className="h-4 w-4 text-gray-400" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-gray-900">{metric.value}</div>
-            <div className="flex items-center justify-between mt-2">
-              <p className="text-xs text-gray-500">{metric.description}</p>
-              <Badge 
-                variant={metric.changeType === 'positive' ? 'default' : 'destructive'}
-                className="text-xs"
-              >
-                {metric.change}
-              </Badge>
+      <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600">Active Officers</p>
+              <p className="text-3xl font-bold text-slate-900">28</p>
+              <p className="text-xs text-emerald-600 font-medium mt-1">↗ +3 since yesterday</p>
             </div>
-          </CardContent>
-        </Card>
-      ))}
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600">Today's Submissions</p>
+              <p className="text-3xl font-bold text-emerald-600">127</p>
+              <p className="text-xs text-emerald-600 font-medium mt-1">↗ +23% vs yesterday</p>
+            </div>
+            <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Database className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600">Pending Reviews</p>
+              <p className="text-3xl font-bold text-yellow-600">45</p>
+              <p className="text-xs text-yellow-600 font-medium mt-1">Requires attention</p>
+            </div>
+            <div className="w-12 h-12 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Clock className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl hover:shadow-2xl transition-all duration-300">
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-slate-600">System Health</p>
+              <p className="text-3xl font-bold text-emerald-600">98.5%</p>
+              <p className="text-xs text-emerald-600 font-medium mt-1">All systems operational</p>
+            </div>
+            <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+              <Activity className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
