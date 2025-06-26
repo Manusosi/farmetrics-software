@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { 
   LayoutDashboard, 
   Users, 
@@ -25,7 +26,9 @@ import {
   Shield, 
   Settings,
   Leaf,
-  LogOut
+  LogOut,
+  Crown,
+  UserCheck
 } from "lucide-react";
 
 const menuItems = [
@@ -78,7 +81,7 @@ const menuItems = [
 
 export function AppSidebar() {
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, profile, signOut } = useAuth();
   
   const handleSignOut = async () => {
     try {
@@ -88,23 +91,35 @@ export function AppSidebar() {
     }
   };
 
+  const getRoleIcon = () => {
+    if (profile?.role === 'admin') return Crown;
+    if (profile?.role === 'supervisor') return UserCheck;
+    return Users;
+  };
+
+  const RoleIcon = getRoleIcon();
+
   return (
-    <Sidebar className="border-r border-slate-200/50 bg-white/95 backdrop-blur-sm">
-      <SidebarHeader className="border-b border-slate-200/50 p-6">
+    <Sidebar className="border-r border-neutral-200/50 dark:border-neutral-700/50 bg-white/95 dark:bg-neutral-800/95 backdrop-blur-sm">
+      <SidebarHeader className="border-b border-neutral-200/50 dark:border-neutral-700/50 p-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+          <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg">
             <Leaf className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="font-bold text-xl bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">FARMETRICS</h1>
-            <p className="text-sm text-slate-600 font-medium">Admin Dashboard</p>
+            <h1 className="font-bold text-xl bg-gradient-to-r from-primary-600 to-primary-700 dark:from-primary-400 dark:to-primary-500 bg-clip-text text-transparent">
+              FARMETRICS
+            </h1>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 font-medium">
+              Admin Dashboard
+            </p>
           </div>
         </div>
       </SidebarHeader>
       
       <SidebarContent className="p-4">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">
+          <SidebarGroupLabel className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-3">
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -118,8 +133,8 @@ export function AppSidebar() {
                         to={item.url}
                         className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group-hover:shadow-sm ${
                           isActive 
-                            ? 'bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 shadow-sm' 
-                            : 'text-slate-700 hover:bg-gradient-to-r hover:from-slate-50 hover:to-slate-100 hover:text-slate-800'
+                            ? 'bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 text-primary-700 dark:text-primary-300 shadow-sm' 
+                            : 'text-neutral-700 dark:text-neutral-300 hover:bg-gradient-to-r hover:from-neutral-50 hover:to-neutral-100 dark:hover:from-neutral-800/50 dark:hover:to-neutral-700/50 hover:text-neutral-800 dark:hover:text-neutral-200'
                         }`}
                       >
                         <item.icon className="w-5 h-5" />
@@ -134,27 +149,33 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       
-      <SidebarFooter className="border-t border-slate-200/50 p-4 space-y-3">
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-slate-50 to-slate-100">
-          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-            {user?.email?.charAt(0).toUpperCase() || 'U'}
+      <SidebarFooter className="border-t border-neutral-200/50 dark:border-neutral-700/50 p-4 space-y-3">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-r from-neutral-50 to-neutral-100 dark:from-neutral-800/50 dark:to-neutral-700/50">
+          <div className="w-10 h-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center text-white">
+            <RoleIcon className="w-5 h-5" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-slate-900 truncate">
-              {user?.email || 'User'}
+            <div className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 truncate">
+              {profile?.full_name || user?.email || 'User'}
             </div>
-            <div className="text-xs text-slate-600">Authenticated</div>
+            <div className="text-xs text-neutral-600 dark:text-neutral-400 capitalize">
+              {profile?.role || 'User'}
+            </div>
           </div>
         </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={handleSignOut}
-          className="w-full justify-start gap-2 bg-white/50 hover:bg-white"
-        >
-          <LogOut className="w-4 h-4" />
-          Sign Out
-        </Button>
+        
+        <div className="flex gap-2">
+          <ThemeToggle />
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={handleSignOut}
+            className="flex-1 justify-start gap-2 bg-white/50 dark:bg-neutral-800/50 hover:bg-white dark:hover:bg-neutral-700"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </Button>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
