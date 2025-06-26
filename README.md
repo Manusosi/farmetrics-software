@@ -1,73 +1,113 @@
-# Welcome to your Lovable project
 
-## Project info
+# Farmetrics - Digital Monitoring Platform for Cocoa Farming
 
-**URL**: https://lovable.dev/projects/7e50042d-c396-4e10-97f0-d1357d80b89f
+## Project Overview
 
-## How can I edit this code?
+Farmetrics is a comprehensive digital monitoring and data collection platform for cocoa farming field operations in Ghana. It consists of two integrated systems:
 
-There are several ways of editing your application.
+1. **Farmetrics Mobile App** (Android, Flutter) - Used by field officers for on-site data collection
+2. **Farmetrics Admin Web Software** (React/TypeScript) - Used by supervisors and administrators
 
-**Use Lovable**
+## Technology Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7e50042d-c396-4e10-97f0-d1357d80b89f) and start prompting.
+- **Frontend**: React, TypeScript, Tailwind CSS, shadcn/ui
+- **Backend**: Supabase (PostgreSQL, Authentication, Storage, Edge Functions)
+- **Development**: Lovable.dev
+- **Mobile**: Flutter (separate repository)
 
-Changes made via Lovable will be committed automatically to this repo.
+## Implementation Checklist
 
-**Use your preferred IDE**
+### ✅ Database Schema (Completed)
+- [x] User profiles and roles (admin, supervisor, analyst, field_officer)
+- [x] Farmers registration data
+- [x] Farm visits with GPS and polygon boundaries
+- [x] Media files with EXIF/GPS metadata
+- [x] Issue reports and tracking
+- [x] Transfer requests management
+- [x] Todo tasks system
+- [x] Row Level Security (RLS) policies
+- [x] Storage bucket for media files
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 🔄 Web Application Features (In Progress)
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+#### Authentication & User Management
+- [ ] Supabase authentication integration
+- [ ] Role-based access control
+- [ ] User profile management
 
-Follow these steps:
+#### Dashboard & Analytics
+- [ ] Real-time metrics overview
+- [ ] Charts and visualizations
+- [ ] Field officer activity monitoring
+- [ ] Regional performance analytics
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+#### Data Management
+- [ ] Farmer database with search/filter
+- [ ] Farm visit logs with media gallery
+- [ ] GPS polygon visualization
+- [ ] Data export functionality (Excel/CSV)
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+#### Issue & Request Management
+- [ ] Issue reports with status tracking
+- [ ] Transfer request approval workflow
+- [ ] Supervisor comments and feedback
 
-# Step 3: Install the necessary dependencies.
-npm i
+#### Task Management
+- [ ] Todo task assignment
+- [ ] Progress tracking
+- [ ] Notification system
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+### 📱 Mobile App Features (External Development)
+- [ ] Offline-first data collection
+- [ ] GPS and polygon capture
+- [ ] Camera with EXIF/GPS metadata
+- [ ] Farmer registration
+- [ ] Issue reporting
+- [ ] Data synchronization
 
-**Edit a file directly in GitHub**
+## Database Schema
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Core Tables
 
-**Use GitHub Codespaces**
+1. **profiles** - User management with roles
+2. **farmers** - Registered farmer information
+3. **farm_visits** - Visit data with GPS and environmental info
+4. **media_files** - Photos/videos with metadata
+5. **issue_reports** - Field issues and tracking
+6. **transfer_requests** - Officer transfer management
+7. **todo_tasks** - Task assignment and tracking
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Key Features
 
-## What technologies are used for this project?
+- **Authentication**: Supabase Auth with JWT tokens
+- **File Storage**: Supabase Storage for media files
+- **Real-time**: Live data updates across systems
+- **Security**: Row Level Security (RLS) for data protection
+- **Offline Support**: Mobile app works offline with sync
 
-This project is built with:
+## API Integration
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The web application connects to Supabase using:
+- Supabase JavaScript client
+- Real-time subscriptions
+- RESTful API patterns
+- Authenticated requests with JWT
 
-## How can I deploy this project?
+## Development Setup
 
-Simply open [Lovable](https://lovable.dev/projects/7e50042d-c396-4e10-97f0-d1357d80b89f) and click on Share -> Publish.
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Configure Supabase credentials
+4. Run development server: `npm run dev`
 
-## Can I connect a custom domain to my Lovable project?
+## Future Enhancements
 
-Yes, you can!
+- [ ] AI integration for crop quality prediction
+- [ ] GIS satellite data overlays
+- [ ] SMS/Push notification system
+- [ ] Advanced analytics and reporting
+- [ ] Multi-language support
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Contributing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project follows the PRD specifications for field data collection and administrative management in Ghana's cocoa farming sector.

@@ -20,12 +20,27 @@ import {
   Bell,
   Settings
 } from "lucide-react";
-import { MetricsCards } from "@/components/dashboard/MetricsCards";
+import { DashboardMetrics } from "@/components/dashboard/DashboardMetrics";
 import { ActivityChart } from "@/components/dashboard/ActivityChart";
 import { SyncStatus } from "@/components/dashboard/SyncStatus";
 import { MapWidget } from "@/components/dashboard/MapWidget";
+import { useFarmVisits } from "@/hooks/useFarmVisits";
+import { format } from "date-fns";
 
 export function Dashboard() {
+  const { data: farmVisits = [] } = useFarmVisits();
+
+  // Get recent activities from farm visits
+  const recentActivities = farmVisits.slice(0, 4).map((visit, index) => ({
+    type: "visit",
+    officer: visit.field_officer?.full_name || "Unknown Officer",
+    action: `Completed farm visit for ${visit.farmer?.full_name || 'farmer'}`,
+    time: visit.visit_date ? format(new Date(visit.visit_date), 'MMM d, yyyy') : 'Unknown date',
+    status: "completed",
+    location: visit.farmer?.region || "Unknown Region",
+    color: "blue"
+  }));
+
   return (
     <div className="min-h-screen">
       {/* Enhanced Header */}
@@ -68,7 +83,7 @@ export function Dashboard() {
         {/* Enhanced Key Metrics */}
         <div className="space-y-2">
           <h2 className="text-xl font-semibold text-slate-800">System Overview</h2>
-          <MetricsCards />
+          <DashboardMetrics />
         </div>
 
         {/* Charts and Analytics Section */}
@@ -92,79 +107,41 @@ export function Dashboard() {
               <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-slate-800">
                   <Activity className="w-5 h-5 text-blue-600" />
-                  Live Activity Feed
+                  Recent Farm Visits
                 </CardTitle>
                 <CardDescription className="text-slate-600">
-                  Real-time field data submissions
+                  Latest field data submissions
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                {[
-                  {
-                    type: "photo",
-                    officer: "John Doe",
-                    action: "Submitted 15 cocoa tree photos",
-                    time: "2 min ago",
-                    status: "pending_review",
-                    location: "Ashanti Region",
-                    color: "blue"
-                  },
-                  {
-                    type: "polygon",
-                    officer: "Mary Johnson",
-                    action: "Updated farm boundary data",
-                    time: "15 min ago",
-                    status: "approved",
-                    location: "Eastern Region",
-                    color: "blue"
-                  },
-                  {
-                    type: "report",
-                    officer: "David Smith",
-                    action: "Completed field assessment",
-                    time: "1 hr ago",
-                    status: "pending_review",
-                    location: "Central Region",
-                    color: "blue"
-                  },
-                  {
-                    type: "video",
-                    officer: "Sarah Wilson",
-                    action: "Recorded field conditions",
-                    time: "2 hrs ago",
-                    status: "approved",
-                    location: "Western Region",
-                    color: "blue"
-                  }
-                ].map((submission, index) => (
+                {recentActivities.length > 0 ? recentActivities.map((activity, index) => (
                   <div key={index} className="group p-4 rounded-xl bg-white/70 border border-slate-200/50 hover:bg-white hover:shadow-md transition-all duration-200">
                     <div className="flex items-start gap-3">
-                      <div className={`w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-sm`}>
-                        {submission.type === 'photo' && <Image className="w-5 h-5 text-white" />}
-                        {submission.type === 'polygon' && <Map className="w-5 h-5 text-white" />}
-                        {submission.type === 'report' && <FileText className="w-5 h-5 text-white" />}
-                        {submission.type === 'video' && <Image className="w-5 h-5 text-white" />}
+                      <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
+                        <MapPin className="w-5 h-5 text-white" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-semibold text-slate-800">{submission.officer}</span>
+                          <span className="font-semibold text-slate-800">{activity.officer}</span>
                           <span className="text-xs text-slate-500">•</span>
-                          <span className="text-sm text-slate-600">{submission.location}</span>
+                          <span className="text-sm text-slate-600">{activity.location}</span>
                         </div>
-                        <p className="text-sm text-slate-700 mb-2">{submission.action}</p>
+                        <p className="text-sm text-slate-700 mb-2">{activity.action}</p>
                         <div className="flex items-center justify-between">
-                          <span className="text-xs text-slate-500">{submission.time}</span>
-                          <Badge 
-                            variant={submission.status === 'approved' ? 'default' : 'secondary'}
-                            className="text-xs"
-                          >
-                            {submission.status.replace('_', ' ')}
+                          <span className="text-xs text-slate-500">{activity.time}</span>
+                          <Badge variant="default" className="text-xs">
+                            {activity.status}
                           </Badge>
                         </div>
                       </div>
                     </div>
                   </div>
-                ))}
+                )) : (
+                  <div className="text-center py-8 text-slate-500">
+                    <MapPin className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <p>No recent farm visits</p>
+                  </div>
+                )}
                 <Button variant="outline" className="w-full mt-4 bg-white/50 hover:bg-white">
                   View All Activities
                 </Button>
