@@ -35,7 +35,7 @@ export function AuthCallback() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 transition-colors">
       <div className="text-center">
         <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4 animate-pulse">
           <Leaf className="w-8 h-8 text-white" />
@@ -46,6 +46,9 @@ export function AuthCallback() {
         <p className="text-neutral-600 dark:text-neutral-400">
           Please wait while we redirect you to the dashboard.
         </p>
+        <div className="mt-4">
+          <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+        </div>
       </div>
     </div>
   );
