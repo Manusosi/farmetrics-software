@@ -62,6 +62,7 @@ export function useUpdateFarmer() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['farmers'] });
+      queryClient.invalidateQueries({ queryKey: ['visit_schedules'] });
     },
   });
 }

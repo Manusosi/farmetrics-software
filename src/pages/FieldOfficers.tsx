@@ -1,292 +1,201 @@
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { 
-  Users, 
-  Search, 
-  Plus, 
-  MapPin, 
-  Activity,
-  Clock,
-  Phone,
-  Mail,
-  Edit,
-  MoreHorizontal,
-  Filter,
-  UserPlus,
-  Award,
-  TrendingUp
-} from "lucide-react";
+import { Search, Plus, Users, UserCheck } from "lucide-react";
+import { FieldOfficerCard } from "@/components/field-officers/FieldOfficerCard";
+import { FieldOfficerDetailView } from "@/components/field-officers/FieldOfficerDetailView";
+import { useFieldOfficersWithProgress } from "@/hooks/useFieldOfficerAssignments";
 
 export function FieldOfficers() {
-  const officers = [
-    {
-      id: 1,
-      name: "John Doe",
-      email: "john.doe@farmetrics.com",
-      phone: "+233 24 123 4567",
-      region: "Ashanti Region",
-      zone: "Zone A-23",
-      status: "active",
-      lastSync: "2 minutes ago",
-      totalSubmissions: 1247,
-      thisWeek: 89,
-      joinDate: "Jan 2024",
-      avatar: "JD",
-      performance: 98
-    },
-    {
-      id: 2,
-      name: "Mary Johnson",
-      email: "mary.johnson@farmetrics.com", 
-      phone: "+233 24 234 5678",
-      region: "Eastern Region",
-      zone: "Zone B-15",
-      status: "active",
-      lastSync: "15 minutes ago",
-      totalSubmissions: 892,
-      thisWeek: 67,
-      joinDate: "Feb 2024",
-      avatar: "MJ",
-      performance: 94
-    },
-    {
-      id: 3,
-      name: "David Smith",
-      email: "david.smith@farmetrics.com",
-      phone: "+233 24 345 6789", 
-      region: "Central Region",
-      zone: "Zone C-08",
-      status: "inactive",
-      lastSync: "3 hours ago",
-      totalSubmissions: 634,
-      thisWeek: 23,
-      joinDate: "Mar 2024",
-      avatar: "DS",
-      performance: 87
-    },
-    {
-      id: 4,
-      name: "Sarah Wilson",
-      email: "sarah.wilson@farmetrics.com",
-      phone: "+233 24 456 7890",
-      region: "Western Region", 
-      zone: "Zone D-12",
-      status: "active",
-      lastSync: "45 minutes ago",
-      totalSubmissions: 1156,
-      thisWeek: 78,
-      joinDate: "Dec 2023",
-      avatar: "SW",
-      performance: 96
-    }
-  ];
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedOfficerId, setSelectedOfficerId] = useState<string | null>(null);
+  const [selectedOfficerName, setSelectedOfficerName] = useState<string>("");
+  
+  const { data: officers, isLoading, error } = useFieldOfficersWithProgress();
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Enhanced Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-slate-200/50 sticky top-0 z-40">
-        <div className="px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gradient-to-r from-emerald-600 to-teal-600 rounded-xl flex items-center justify-center">
-                  <Users className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                    Field Officers
-                  </h1>
-                  <p className="text-slate-600 font-medium">Manage your field team and monitor performance</p>
-                </div>
-              </div>
-            </div>
-            <Button className="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700">
-              <UserPlus className="w-4 h-4 mr-2" />
-              Add New Officer
-            </Button>
+  const filteredOfficers = officers?.filter(officer =>
+    officer.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    officer.zone_assignment?.toLowerCase().includes(searchTerm.toLowerCase())
+  ) || [];
+
+  const handleViewDetails = (officerId: string, officerName: string) => {
+    setSelectedOfficerId(officerId);
+    setSelectedOfficerName(officerName);
+  };
+
+  const handleBack = () => {
+    setSelectedOfficerId(null);
+    setSelectedOfficerName("");
+  };
+
+  if (selectedOfficerId) {
+    return (
+      <div className="p-6 space-y-6">
+        <FieldOfficerDetailView 
+          officerId={selectedOfficerId}
+          officerName={selectedOfficerName}
+          onBack={handleBack}
+        />
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading field officers...</p>
           </div>
         </div>
       </div>
+    );
+  }
 
-      <div className="p-8 space-y-8">
-        {/* Enhanced Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-600">Total Officers</p>
-                  <p className="text-3xl font-bold text-slate-900">34</p>
-                  <p className="text-xs text-emerald-600 font-medium mt-1">+2 this month</p>
-                </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-600">Active Today</p>
-                  <p className="text-3xl font-bold text-emerald-600">28</p>
-                  <p className="text-xs text-emerald-600 font-medium mt-1">82% online rate</p>
-                </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-600">Avg Performance</p>
-                  <p className="text-3xl font-bold text-blue-600">94%</p>
-                  <p className="text-xs text-emerald-600 font-medium mt-1">+3% vs last month</p>
-                </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center">
-                  <Award className="w-6 h-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-slate-600">Regions Covered</p>
-                  <p className="text-3xl font-bold text-orange-600">8</p>
-                  <p className="text-xs text-slate-500 font-medium mt-1">Nationwide coverage</p>
-                </div>
-                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-white" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+  if (error) {
+    return (
+      <div className="p-6">
+        <Card>
+          <CardContent className="p-8 text-center">
+            <p className="text-red-600">Error loading field officers. Please try again.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const totalOfficers = officers?.length || 0;
+  const activeOfficers = officers?.filter(o => Object.keys(o.farmers).length > 0).length || 0;
+
+  return (
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">Field Officers</h1>
+          <p className="text-gray-600 mt-1">
+            Manage and monitor field officer activities and visit progress
+          </p>
         </div>
+        <Button className="bg-primary-600 hover:bg-primary-700">
+          <Plus className="w-4 h-4 mr-2" />
+          Add Officer
+        </Button>
+      </div>
 
-        {/* Enhanced Search and Filters */}
-        <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
-          <CardContent className="p-6">
-            <div className="flex items-center gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-                <Input 
-                  placeholder="Search officers by name, email, or region..." 
-                  className="pl-10 bg-white/70 border-slate-300 focus:bg-white"
-                />
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Officers</p>
+                <p className="text-2xl font-bold text-gray-900">{totalOfficers}</p>
               </div>
-              <Button variant="outline" className="bg-white/50 hover:bg-white">
-                <Filter className="w-4 h-4 mr-2" />
-                Region
-              </Button>
-              <Button variant="outline" className="bg-white/50 hover:bg-white">
-                <Filter className="w-4 h-4 mr-2" />
-                Status
-              </Button>
-              <Button variant="outline" className="bg-white/50 hover:bg-white">
-                <TrendingUp className="w-4 h-4 mr-2" />
-                Performance
-              </Button>
+              <Users className="w-8 h-8 text-blue-500" />
             </div>
           </CardContent>
         </Card>
-
-        {/* Enhanced Officers Directory */}
-        <Card className="bg-white/60 backdrop-blur-sm border-slate-200/50 shadow-xl">
-          <CardHeader className="pb-6">
-            <CardTitle className="text-xl text-slate-800">Field Officers Directory</CardTitle>
-            <CardDescription className="text-slate-600">
-              Complete team overview with performance metrics and activity status
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              {officers.map((officer) => (
-                <div key={officer.id} className="group p-6 border border-slate-200/50 rounded-2xl bg-white/70 hover:bg-white hover:shadow-lg transition-all duration-300">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="relative">
-                        <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                          {officer.avatar}
-                        </div>
-                        <div className={`absolute -bottom-1 -right-1 w-5 h-5 rounded-full border-2 border-white ${
-                          officer.status === 'active' ? 'bg-emerald-500' : 'bg-slate-400'
-                        }`} />
-                      </div>
-                      <div className="space-y-1">
-                        <h3 className="font-bold text-lg text-slate-900">{officer.name}</h3>
-                        <div className="flex items-center gap-4 text-sm text-slate-600">
-                          <span className="flex items-center gap-1">
-                            <Mail className="w-3 h-3" />
-                            {officer.email}
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Phone className="w-3 h-3" />
-                            {officer.phone}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-4 text-sm text-slate-500">
-                          <span className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3" />
-                            {officer.region} • {officer.zone}
-                          </span>
-                          <span>Joined {officer.joinDate}</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-8">
-                      <div className="grid grid-cols-3 gap-6 text-center">
-                        <div>
-                          <p className="text-sm font-medium text-slate-600">Total</p>
-                          <p className="text-xl font-bold text-slate-900">{officer.totalSubmissions.toLocaleString()}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-slate-600">This Week</p>
-                          <p className="text-xl font-bold text-emerald-600">{officer.thisWeek}</p>
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-slate-600">Performance</p>
-                          <p className="text-xl font-bold text-blue-600">{officer.performance}%</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="text-center">
-                          <p className="text-sm font-medium text-slate-600">Last Sync</p>
-                          <p className="text-sm text-slate-700">{officer.lastSync}</p>
-                        </div>
-                        <Badge 
-                          variant={officer.status === 'active' ? 'default' : 'secondary'}
-                          className="capitalize"
-                        >
-                          {officer.status}
-                        </Badge>
-                        <Button variant="ghost" size="sm" className="hover:bg-slate-100">
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" className="hover:bg-slate-100">
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Active Officers</p>
+                <p className="text-2xl font-bold text-green-600">{activeOfficers}</p>
+              </div>
+              <UserCheck className="w-8 h-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Avg Progress</p>
+                <p className="text-2xl font-bold text-purple-600">
+                  {officers && officers.length > 0 
+                    ? Math.round(officers.reduce((acc, officer) => {
+                        const totalVisits = Object.values(officer.farmers).reduce((sum, farmer) => sum + farmer.visits.length, 0);
+                        const completedVisits = Object.values(officer.farmers).reduce((sum, farmer) => 
+                          sum + farmer.visits.filter(v => v.status === 'completed').length, 0
+                        );
+                        return acc + (totalVisits > 0 ? (completedVisits / totalVisits) * 100 : 0);
+                      }, 0) / officers.length)
+                    : 0
+                  }%
+                </p>
+              </div>
+              <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Farmers</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {officers?.reduce((acc, officer) => acc + Object.keys(officer.farmers).length, 0) || 0}
+                </p>
+              </div>
+              <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                <Users className="w-4 h-4 text-orange-500" />
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Search and Filters */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Field Officers Overview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Search officers by name or zone..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+
+          {filteredOfficers.length === 0 ? (
+            <div className="text-center py-12">
+              <Users className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No Field Officers Found</h3>
+              <p className="text-gray-600 mb-4">
+                {searchTerm ? 'No officers match your search criteria.' : 'No field officers have been added yet.'}
+              </p>
+              <Button className="bg-primary-600 hover:bg-primary-700">
+                <Plus className="w-4 h-4 mr-2" />
+                Add First Officer
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {filteredOfficers.map((officer) => (
+                <FieldOfficerCard
+                  key={officer.id}
+                  officer={officer}
+                  onViewDetails={(id) => handleViewDetails(id, officer.full_name)}
+                />
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }

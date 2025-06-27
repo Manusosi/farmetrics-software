@@ -9,10 +9,72 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      cce_records: {
+        Row: {
+          created_at: string | null
+          crop_type: string | null
+          farmer_id: string
+          field_officer_id: string
+          harvest_date: string | null
+          harvest_id: string
+          id: string
+          quality_grade: string | null
+          quantity_collected: number | null
+          visit_schedule_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          crop_type?: string | null
+          farmer_id: string
+          field_officer_id: string
+          harvest_date?: string | null
+          harvest_id: string
+          id?: string
+          quality_grade?: string | null
+          quantity_collected?: number | null
+          visit_schedule_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          crop_type?: string | null
+          farmer_id?: string
+          field_officer_id?: string
+          harvest_date?: string | null
+          harvest_id?: string
+          id?: string
+          quality_grade?: string | null
+          quantity_collected?: number | null
+          visit_schedule_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cce_records_farmer_id_fkey"
+            columns: ["farmer_id"]
+            isOneToOne: false
+            referencedRelation: "farmers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cce_records_field_officer_id_fkey"
+            columns: ["field_officer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cce_records_visit_schedule_id_fkey"
+            columns: ["visit_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "visit_schedules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       farm_visits: {
         Row: {
           cocoa_bean_quality: string | null
           cocoa_tree_age: number | null
+          completion_percentage: number | null
           created_at: string | null
           farmer_id: string | null
           field_officer_id: string | null
@@ -26,10 +88,12 @@ export type Database = {
           updated_at: string | null
           visit_date: string | null
           visit_notes: string | null
+          visit_schedule_id: string | null
         }
         Insert: {
           cocoa_bean_quality?: string | null
           cocoa_tree_age?: number | null
+          completion_percentage?: number | null
           created_at?: string | null
           farmer_id?: string | null
           field_officer_id?: string | null
@@ -43,10 +107,12 @@ export type Database = {
           updated_at?: string | null
           visit_date?: string | null
           visit_notes?: string | null
+          visit_schedule_id?: string | null
         }
         Update: {
           cocoa_bean_quality?: string | null
           cocoa_tree_age?: number | null
+          completion_percentage?: number | null
           created_at?: string | null
           farmer_id?: string | null
           field_officer_id?: string | null
@@ -60,6 +126,7 @@ export type Database = {
           updated_at?: string | null
           visit_date?: string | null
           visit_notes?: string | null
+          visit_schedule_id?: string | null
         }
         Relationships: [
           {
@@ -74,6 +141,13 @@ export type Database = {
             columns: ["field_officer_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "farm_visits_visit_schedule_id_fkey"
+            columns: ["visit_schedule_id"]
+            isOneToOne: false
+            referencedRelation: "visit_schedules"
             referencedColumns: ["id"]
           },
         ]
@@ -125,6 +199,54 @@ export type Database = {
           {
             foreignKeyName: "farmers_registered_by_fkey"
             columns: ["registered_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      field_officer_assignments: {
+        Row: {
+          created_at: string | null
+          field_officer_id: string
+          id: string
+          region: string
+          supervisor_id: string
+          target_visits: number | null
+          updated_at: string | null
+          zone: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          field_officer_id: string
+          id?: string
+          region: string
+          supervisor_id: string
+          target_visits?: number | null
+          updated_at?: string | null
+          zone?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          field_officer_id?: string
+          id?: string
+          region?: string
+          supervisor_id?: string
+          target_visits?: number | null
+          updated_at?: string | null
+          zone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "field_officer_assignments_field_officer_id_fkey"
+            columns: ["field_officer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "field_officer_assignments_supervisor_id_fkey"
+            columns: ["supervisor_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -226,7 +348,10 @@ export type Database = {
           region: string | null
           role: Database["public"]["Enums"]["user_role"]
           sub_county: string | null
+          supervisor_id: string | null
+          target_visits: number | null
           updated_at: string | null
+          zone_assignment: string | null
         }
         Insert: {
           created_at?: string | null
@@ -237,7 +362,10 @@ export type Database = {
           region?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           sub_county?: string | null
+          supervisor_id?: string | null
+          target_visits?: number | null
           updated_at?: string | null
+          zone_assignment?: string | null
         }
         Update: {
           created_at?: string | null
@@ -248,9 +376,20 @@ export type Database = {
           region?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           sub_county?: string | null
+          supervisor_id?: string | null
+          target_visits?: number | null
           updated_at?: string | null
+          zone_assignment?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_supervisor_id_fkey"
+            columns: ["supervisor_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       todo_tasks: {
         Row: {
@@ -354,6 +493,57 @@ export type Database = {
           },
         ]
       }
+      visit_schedules: {
+        Row: {
+          completion_percentage: number | null
+          created_at: string | null
+          farmer_id: string
+          field_officer_id: string
+          id: string
+          scheduled_date: string | null
+          status: Database["public"]["Enums"]["visit_status"] | null
+          updated_at: string | null
+          visit_number: number
+        }
+        Insert: {
+          completion_percentage?: number | null
+          created_at?: string | null
+          farmer_id: string
+          field_officer_id: string
+          id?: string
+          scheduled_date?: string | null
+          status?: Database["public"]["Enums"]["visit_status"] | null
+          updated_at?: string | null
+          visit_number: number
+        }
+        Update: {
+          completion_percentage?: number | null
+          created_at?: string | null
+          farmer_id?: string
+          field_officer_id?: string
+          id?: string
+          scheduled_date?: string | null
+          status?: Database["public"]["Enums"]["visit_status"] | null
+          updated_at?: string | null
+          visit_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "visit_schedules_farmer_id_fkey"
+            columns: ["farmer_id"]
+            isOneToOne: false
+            referencedRelation: "farmers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "visit_schedules_field_officer_id_fkey"
+            columns: ["field_officer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -363,6 +553,7 @@ export type Database = {
     }
     Enums: {
       user_role: "admin" | "supervisor" | "analyst" | "field_officer"
+      visit_status: "pending" | "in_progress" | "completed" | "incomplete"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -479,6 +670,7 @@ export const Constants = {
   public: {
     Enums: {
       user_role: ["admin", "supervisor", "analyst", "field_officer"],
+      visit_status: ["pending", "in_progress", "completed", "incomplete"],
     },
   },
 } as const

@@ -16,7 +16,8 @@ export function useFarmVisits() {
           *,
           farmer:farmers(full_name, region),
           field_officer:profiles(full_name),
-          media_files(*)
+          media_files(*),
+          visit_schedule:visit_schedules(visit_number, status, completion_percentage)
         `)
         .order('visit_date', { ascending: false });
 
@@ -42,6 +43,7 @@ export function useCreateFarmVisit() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['farm_visits'] });
+      queryClient.invalidateQueries({ queryKey: ['visit_schedules'] });
     },
   });
 }
