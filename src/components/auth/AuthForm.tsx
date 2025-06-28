@@ -18,7 +18,7 @@ export function AuthForm() {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [role, setRole] = useState<'admin' | 'supervisor' | 'field_officer'>('field_officer');
+  const [role, setRole] = useState<'admin' | 'supervisor'>('supervisor');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -45,6 +45,7 @@ export function AuthForm() {
           return;
         }
         
+        console.log('Starting signup process...');
         const { error } = await signUp(email, password, {
           full_name: fullName,
           role: role
@@ -62,7 +63,7 @@ export function AuthForm() {
             setError(error.message);
           }
         } else {
-          // Success - user will be redirected via the useEffect above
+          console.log('Signup successful, user should be redirected via useEffect');
         }
       } else {
         const { error } = await signIn(email, password);
@@ -111,11 +112,11 @@ export function AuthForm() {
             </svg>
           </div>
           <CardTitle className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-            {isSignUp ? "Create Account" : "Welcome Back"}
+            {isSignUp ? "Create Admin Account" : "Welcome Back"}
           </CardTitle>
           <p className="text-neutral-600 dark:text-neutral-400">
             {isSignUp 
-              ? "Join the FarMetrics platform" 
+              ? "Join the FarMetrics admin dashboard" 
               : "Sign in to your FarMetrics account"
             }
           </p>
@@ -155,12 +156,11 @@ export function AuthForm() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="role">Role</Label>
-                  <Select value={role} onValueChange={(value: 'admin' | 'supervisor' | 'field_officer') => setRole(value)}>
+                  <Select value={role} onValueChange={(value: 'admin' | 'supervisor') => setRole(value)}>
                     <SelectTrigger className="bg-white/50 dark:bg-neutral-700/50">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="field_officer">Field Officer</SelectItem>
                       <SelectItem value="supervisor">Supervisor</SelectItem>
                       <SelectItem value="admin">Admin</SelectItem>
                     </SelectContent>

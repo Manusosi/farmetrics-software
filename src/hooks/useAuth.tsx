@@ -12,12 +12,11 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, userData: { full_name: string; role: 'admin' | 'supervisor' | 'field_officer' }) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, userData: { full_name: string; role: 'admin' | 'supervisor' }) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   isAdmin: boolean;
   isSupervisor: boolean;
-  isFieldOfficer: boolean;
   canAccess: boolean;
 }
 
@@ -62,12 +61,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch profile with a delay to ensure database trigger has completed
+          // For new signups, wait a bit longer for profile creation
+          const delay = event === 'SIGNED_UP' ? 2000 : 1000;
           setTimeout(async () => {
             const userProfile = await fetchProfile(session.user.id);
             setProfile(userProfile);
             setLoading(false);
-          }, 1000); // Increased delay to ensure profile creation completes
+          }, delay);
         } else {
           setProfile(null);
           setLoading(false);
@@ -124,11 +124,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signUp = async (
     email: string, 
     password: string, 
-    userData: { full_name: string; role: 'admin' | 'supervisor' | 'field_officer' }
+    userData: { full_name: string; role: 'admin' | 'supervisor' }
   ) => {
     try {
       setLoading(true);
-      const redirectUrl = `${window.location.origin}/auth/callback`;
       
       console.log('Signing up user with data:', userData);
       
@@ -136,7 +135,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
           data: {
             full_name: userData.full_name,
             role: userData.role,
@@ -195,7 +193,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const isAdmin = profile?.role === 'admin';
   const isSupervisor = profile?.role === 'supervisor';
-  const isFieldOfficer = profile?.role === 'field_officer';
   const canAccess = isAdmin || isSupervisor;
 
   const value = {
@@ -209,7 +206,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signOut,
     isAdmin,
     isSupervisor,
-    isFieldOfficer,
     canAccess,
   };
 

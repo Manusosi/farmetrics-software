@@ -36,7 +36,7 @@ function LoadingScreen() {
 }
 
 // Protected Route component for admin/supervisor dashboard
-function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, profile, loading, canAccess } = useAuth();
 
   if (loading) {
@@ -48,27 +48,21 @@ function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!canAccess) {
-    // Field officers get a different interface
+    // This shouldn't happen now since we only allow admin/supervisor signup
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
         <div className="text-center max-w-md mx-auto p-6">
-          <div className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4">
+          <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-4">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.728-.833-2.498 0L4.316 16.5c-.77.833.192 2.5 1.732 2.5z" />
             </svg>
           </div>
           <h2 className="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-2">
-            Field Officer Access
+            Access Denied
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400 mb-4">
-            Welcome {profile.full_name}! As a field officer, please use the mobile application to access your dashboard and manage farm visits.
+            Your account doesn't have permission to access this dashboard.
           </p>
-          <button 
-            onClick={() => window.location.href = '/auth'}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors mr-2"
-          >
-            Switch Account
-          </button>
           <button 
             onClick={async () => {
               const { signOut } = useAuth();
@@ -147,9 +141,9 @@ const App = () => (
               <Route 
                 path="/*" 
                 element={
-                  <ProtectedAdminRoute>
+                  <ProtectedRoute>
                     <AdminDashboard />
-                  </ProtectedAdminRoute>
+                  </ProtectedRoute>
                 } 
               />
             </Routes>
