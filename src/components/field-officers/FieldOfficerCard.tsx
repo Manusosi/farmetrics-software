@@ -13,7 +13,7 @@ interface FieldOfficer {
   target_visits?: number;
   supervisor?: {
     full_name: string;
-  };
+  } | null;
   farmers: Record<string, {
     farmer_name: string;
     visits: Array<{

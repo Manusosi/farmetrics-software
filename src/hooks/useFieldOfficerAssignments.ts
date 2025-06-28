@@ -72,7 +72,11 @@ export function useFieldOfficersWithProgress() {
               visits: []
             };
           }
-          acc[farmerId].visits.push(visit);
+          acc[farmerId].visits.push({
+            visit_number: visit.visit_number,
+            status: visit.status,
+            completion_percentage: visit.completion_percentage
+          });
           return acc;
         }, {} as Record<string, { farmer_name: string; visits: any[] }>);
 
@@ -83,6 +87,7 @@ export function useFieldOfficersWithProgress() {
 
         return {
           ...officer,
+          supervisor: officer.supervisor ? officer.supervisor[0] : null,
           farmers: farmerVisits
         };
       });

@@ -4,7 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Phone, MapPin, User, Calendar } from "lucide-react";
 import { VisitProgressGrid } from "./VisitProgressGrid";
-import { useFieldOfficerVisits } from "@/hooks/useFieldOfficerAssignments";
+import { useFieldOfficerVisits } from "@/hooks/useVisitSchedules";
+
+interface FarmerVisitData {
+  farmer_name: string;
+  farmer_phone?: string;
+  farmer_region?: string;
+  visits: Array<{
+    visit_number: number;
+    status: string;
+    completion_percentage: number;
+  }>;
+}
 
 interface FieldOfficerDetailViewProps {
   officerId: string;
@@ -37,13 +48,17 @@ export function FieldOfficerDetailView({ officerId, officerName, onBack }: Field
         visits: []
       };
     }
-    acc[farmerId].visits.push(visit);
+    acc[farmerId].visits.push({
+      visit_number: visit.visit_number,
+      status: visit.status,
+      completion_percentage: visit.completion_percentage
+    });
     return acc;
-  }, {} as Record<string, any>) || {};
+  }, {} as Record<string, FarmerVisitData>) || {};
 
   // Sort visits by visit number for each farmer
   Object.values(farmerVisits).forEach(farmer => {
-    farmer.visits.sort((a: any, b: any) => a.visit_number - b.visit_number);
+    farmer.visits.sort((a, b) => a.visit_number - b.visit_number);
   });
 
   const totalVisits = visits?.length || 0;
@@ -102,7 +117,7 @@ export function FieldOfficerDetailView({ officerId, officerName, onBack }: Field
         ) : (
           <div className="grid gap-4">
             {Object.entries(farmerVisits).map(([farmerId, farmer]) => {
-              const farmerCompletedVisits = farmer.visits.filter((v: any) => v.status === 'completed').length;
+              const farmerCompletedVisits = farmer.visits.filter(v => v.status === 'completed').length;
               const farmerProgress = farmer.visits.length > 0 ? (farmerCompletedVisits / farmer.visits.length) * 100 : 0;
               
               return (
@@ -140,13 +155,13 @@ export function FieldOfficerDetailView({ officerId, officerName, onBack }: Field
                       </div>
                       <div>
                         <div className="font-semibold text-yellow-600">
-                          {farmer.visits.filter((v: any) => v.status === 'in_progress' || v.status === 'incomplete').length}
+                          {farmer.visits.filter(v => v.status === 'in_progress' || v.status === 'incomplete').length}
                         </div>
                         <div className="text-gray-600">In Progress</div>
                       </div>
                       <div>
                         <div className="font-semibold text-gray-600">
-                          {farmer.visits.filter((v: any) => v.status === 'pending').length}
+                          {farmer.visits.filter(v => v.status === 'pending').length}
                         </div>
                         <div className="text-gray-600">Pending</div>
                       </div>
