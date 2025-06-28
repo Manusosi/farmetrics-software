@@ -50,7 +50,7 @@ export function AuthForm() {
     password: '',
     confirmPassword: '',
     fullName: '',
-    role: 'supervisor' as 'admin' | 'supervisor',
+    role: 'supervisor' as 'admin' | 'supervisor' | 'field_officer',
   });
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -71,6 +71,7 @@ export function AuthForm() {
         toast.success('Successfully signed in!');
       }
     } catch (error: any) {
+      console.error('Sign in error:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -103,6 +104,7 @@ export function AuthForm() {
       );
 
       if (error) {
+        console.error('Sign up error:', error);
         if (error.message.includes('User already registered')) {
           toast.error('An account with this email already exists. Please sign in instead.');
         } else {
@@ -110,9 +112,10 @@ export function AuthForm() {
         }
       } else {
         toast.success('Account created successfully! Please check your email to verify your account.');
-        setActiveTab('signin');
+        // Don't switch tabs, let the user stay to see the success message
       }
     } catch (error: any) {
+      console.error('Sign up error:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -124,9 +127,11 @@ export function AuthForm() {
     try {
       const { error } = await signInWithGoogle();
       if (error) {
+        console.error('Google sign in error:', error);
         toast.error(error.message || 'Failed to sign in with Google');
       }
     } catch (error: any) {
+      console.error('Google sign in error:', error);
       toast.error('An unexpected error occurred');
     } finally {
       setLoading(false);
@@ -261,7 +266,7 @@ export function AuthForm() {
                   <Label htmlFor="signup-role" className="text-neutral-700 dark:text-neutral-300">Role</Label>
                   <Select
                     value={signUpData.role}
-                    onValueChange={(value: 'admin' | 'supervisor') => 
+                    onValueChange={(value: 'admin' | 'supervisor' | 'field_officer') => 
                       setSignUpData({ ...signUpData, role: value })
                     }
                   >
@@ -271,6 +276,7 @@ export function AuthForm() {
                     <SelectContent className="bg-white dark:bg-neutral-800 border-neutral-300 dark:border-neutral-600">
                       <SelectItem value="admin">Administrator</SelectItem>
                       <SelectItem value="supervisor">Supervisor</SelectItem>
+                      <SelectItem value="field_officer">Field Officer</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -335,8 +341,8 @@ export function AuthForm() {
             <div className="flex items-start gap-2">
               <AlertCircle className="w-4 h-4 text-primary-600 dark:text-primary-400 mt-0.5 flex-shrink-0" />
               <div className="text-sm text-primary-800 dark:text-primary-200">
-                <p className="font-medium">Administrative Access Only</p>
-                <p>Only administrators and supervisors can access this dashboard. Field officers use the mobile application.</p>
+                <p className="font-medium">Administrative Access</p>
+                <p>Administrators and supervisors access the web dashboard. Field officers use the mobile application.</p>
               </div>
             </div>
           </div>
