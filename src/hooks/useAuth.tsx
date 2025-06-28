@@ -1,6 +1,7 @@
+
 import { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
+import { User, Session } from '@supabase/supabase-js';
 import { Tables } from '@/integrations/supabase/types';
 
 type UserProfile = Tables<'profiles'>;
@@ -54,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event: AuthChangeEvent, session) => {
+      async (event, session) => {
         console.log('Auth event:', event, 'Session user ID:', session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
@@ -130,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       console.log('Signing up user with data:', userData);
       
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -144,7 +145,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (error) {
         console.error('Signup error:', error);
       } else {
-        console.log('Signup successful');
+        console.log('Signup successful:', data);
       }
       
       return { error };

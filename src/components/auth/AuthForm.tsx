@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Mail, Lock, User, Phone, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
@@ -17,21 +17,20 @@ export function AuthForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [role, setRole] = useState<'admin' | 'supervisor'>('supervisor');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { signIn, signUp, signInWithGoogle, user } = useAuth();
+  const { signIn, signUp, signInWithGoogle, user, profile } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if user is already authenticated
   useEffect(() => {
-    if (user) {
-      navigate('/', { replace: true });
+    if (user && profile) {
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, profile, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,7 +62,8 @@ export function AuthForm() {
             setError(error.message);
           }
         } else {
-          console.log('Signup successful, user should be redirected via useEffect');
+          console.log('Signup successful, redirecting to dashboard...');
+          // The useEffect above will handle the redirect
         }
       } else {
         const { error } = await signIn(email, password);
@@ -74,6 +74,9 @@ export function AuthForm() {
           } else {
             setError(error.message);
           }
+        } else {
+          console.log('Signin successful, redirecting to dashboard...');
+          // The useEffect above will handle the redirect
         }
       }
     } catch (err) {
@@ -112,11 +115,11 @@ export function AuthForm() {
             </svg>
           </div>
           <CardTitle className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-            {isSignUp ? "Create Admin Account" : "Welcome Back"}
+            {isSignUp ? "Create Account" : "Welcome Back"}
           </CardTitle>
           <p className="text-neutral-600 dark:text-neutral-400">
             {isSignUp 
-              ? "Join the FarMetrics admin dashboard" 
+              ? "Join the FarMetrics dashboard" 
               : "Sign in to your FarMetrics account"
             }
           </p>
@@ -137,20 +140,6 @@ export function AuthForm() {
                     onChange={(e) => setFullName(e.target.value)}
                     placeholder="Enter your full name"
                     required
-                    className="bg-white/50 dark:bg-neutral-700/50"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phoneNumber" className="flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    Phone Number (Optional)
-                  </Label>
-                  <Input
-                    id="phoneNumber"
-                    type="tel"
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    placeholder="Enter your phone number"
                     className="bg-white/50 dark:bg-neutral-700/50"
                   />
                 </div>

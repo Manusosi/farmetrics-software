@@ -11,6 +11,7 @@ import { AuthForm } from "@/components/auth/AuthForm";
 import { AuthCallback } from "@/pages/AuthCallback";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Dashboard } from "@/components/Dashboard";
+import { SupervisorDashboard } from "@/components/SupervisorDashboard";
 import { FieldOfficers } from "@/pages/FieldOfficers";
 import { MediaReview } from "@/pages/MediaReview";
 import { FarmMapping } from "@/pages/FarmMapping";
@@ -35,8 +36,8 @@ function LoadingScreen() {
   );
 }
 
-// Protected Route component for admin/supervisor dashboard
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+// Protected Route component for dashboard
+function ProtectedDashboard({ children }: { children: React.ReactNode }) {
   const { user, profile, loading, canAccess } = useAuth();
 
   if (loading) {
@@ -44,11 +45,10 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user || !profile) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (!canAccess) {
-    // This shouldn't happen now since we only allow admin/supervisor signup
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
         <div className="text-center max-w-md mx-auto p-6">
@@ -63,15 +63,6 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
           <p className="text-neutral-600 dark:text-neutral-400 mb-4">
             Your account doesn't have permission to access this dashboard.
           </p>
-          <button 
-            onClick={async () => {
-              const { signOut } = useAuth();
-              await signOut();
-            }}
-            className="px-4 py-2 bg-neutral-600 text-white rounded-lg hover:bg-neutral-700 transition-colors"
-          >
-            Sign Out
-          </button>
         </div>
       </div>
     );
@@ -82,21 +73,27 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 // Admin Dashboard Layout
 function AdminDashboard() {
+  const { isAdmin } = useAuth();
+  
   return (
     <SidebarProvider defaultOpen={true}>
       <div className="min-h-screen flex w-full bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
         <AppSidebar />
         <main className="flex-1 overflow-auto">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/officers" element={<FieldOfficers />} />
-            <Route path="/media" element={<MediaReview />} />
-            <Route path="/mapping" element={<FarmMapping />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/messaging" element={<Messaging />} />
-            <Route path="/roles" element={<Roles />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/" element={isAdmin ? <Dashboard /> : <SupervisorDashboard />} />
+            {isAdmin && (
+              <>
+                <Route path="/officers" element={<FieldOfficers />} />
+                <Route path="/media" element={<MediaReview />} />
+                <Route path="/mapping" element={<FarmMapping />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/messaging" element={<Messaging />} />
+                <Route path="/roles" element={<Roles />} />
+                <Route path="/settings" element={<Settings />} />
+              </>
+            )}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
@@ -105,7 +102,7 @@ function AdminDashboard() {
   );
 }
 
-// Auth guard component
+// Auth guard component - redirects authenticated users to dashboard
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
 
@@ -114,7 +111,7 @@ function AuthGuard({ children }: { children: React.ReactNode }) {
   }
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
@@ -129,8 +126,9 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
+              {/* Default route is auth page */}
               <Route 
-                path="/auth" 
+                path="/" 
                 element={
                   <AuthGuard>
                     <AuthForm />
@@ -139,13 +137,14 @@ const App = () => (
               />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route 
-                path="/*" 
+                path="/dashboard/*" 
                 element={
-                  <ProtectedRoute>
+                  <ProtectedDashboard>
                     <AdminDashboard />
-                  </ProtectedRoute>
+                  </ProtectedDashboard>
                 } 
               />
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>
         </AuthProvider>
