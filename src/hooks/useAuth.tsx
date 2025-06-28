@@ -32,6 +32,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Fetch user profile
   const fetchProfile = async (userId: string) => {
     try {
+      console.log('Fetching profile for user:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -42,6 +43,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.error('Error fetching profile:', error);
         return null;
       }
+      console.log('Profile fetched successfully:', data);
       return data;
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -50,20 +52,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   useEffect(() => {
+    console.log('Setting up auth state listener');
+    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth event:', event, 'Session:', session?.user?.id);
+        console.log('Auth event:', event, 'Session user ID:', session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          // Fetch profile after a short delay to ensure database trigger has completed
+          // Fetch profile with a delay to ensure database trigger has completed
           setTimeout(async () => {
             const userProfile = await fetchProfile(session.user.id);
             setProfile(userProfile);
             setLoading(false);
-          }, 500);
+          }, 1000); // Increased delay to ensure profile creation completes
         } else {
           setProfile(null);
           setLoading(false);
@@ -72,29 +76,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     );
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        fetchProfile(session.user.id).then((userProfile) => {
-          setProfile(userProfile);
+    const initializeAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          console.error('Error getting session:', error);
           setLoading(false);
-        });
-      } else {
+          return;
+        }
+
+        console.log('Initial session:', session?.user?.id);
+        setSession(session);
+        setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          const userProfile = await fetchProfile(session.user.id);
+          setProfile(userProfile);
+        }
+      } catch (error) {
+        console.error('Error initializing auth:', error);
+      } finally {
         setLoading(false);
       }
-    });
+    };
+
+    initializeAuth();
 
     return () => subscription.unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-    return { error };
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      return { error };
+    } catch (error) {
+      console.error('Sign in error:', error);
+      return { error };
+    } finally {
+      setLoading(false);
+    }
   };
 
   const signUp = async (
@@ -102,41 +126,71 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string, 
     userData: { full_name: string; role: 'admin' | 'supervisor' | 'field_officer' }
   ) => {
-    const redirectUrl = `${window.location.origin}/auth/callback`;
-    
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: redirectUrl,
-        data: {
-          full_name: userData.full_name,
-          role: userData.role,
+    try {
+      setLoading(true);
+      const redirectUrl = `${window.location.origin}/auth/callback`;
+      
+      console.log('Signing up user with data:', userData);
+      
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            full_name: userData.full_name,
+            role: userData.role,
+          },
         },
-      },
-    });
-    return { error };
+      });
+      
+      if (error) {
+        console.error('Signup error:', error);
+      } else {
+        console.log('Signup successful');
+      }
+      
+      return { error };
+    } catch (error) {
+      console.error('Sign up error:', error);
+      return { error };
+    } finally {
+      setLoading(false);
+    }
   };
 
   const signInWithGoogle = async () => {
-    const redirectUrl = `${window.location.origin}/auth/callback`;
-    
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: redirectUrl,
-        queryParams: {
-          access_type: 'offline',
-          prompt: 'consent',
+    try {
+      setLoading(true);
+      const redirectUrl = `${window.location.origin}/auth/callback`;
+      
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: redirectUrl,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
-      },
-    });
-    return { error };
+      });
+      return { error };
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      return { error };
+    } finally {
+      setLoading(false);
+    }
   };
 
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    } catch (error) {
+      console.error('Sign out error:', error);
+      throw error;
+    }
   };
 
   const isAdmin = profile?.role === 'admin';

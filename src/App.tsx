@@ -23,19 +23,24 @@ import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
 
+// Loading component
+function LoadingScreen() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+        <p className="text-neutral-600 dark:text-neutral-400">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
 // Protected Route component for admin/supervisor dashboard
 function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
   const { user, profile, loading, canAccess } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-neutral-600 dark:text-neutral-400">Loading...</p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   if (!user || !profile) {
@@ -43,7 +48,7 @@ function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!canAccess) {
-    // Field officers should be redirected to a different interface or shown a message
+    // Field officers get a different interface
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900">
         <div className="text-center max-w-md mx-auto p-6">
@@ -56,13 +61,22 @@ function ProtectedAdminRoute({ children }: { children: React.ReactNode }) {
             Field Officer Access
           </h2>
           <p className="text-neutral-600 dark:text-neutral-400 mb-4">
-            As a field officer, please use the mobile application to access your dashboard and manage farm visits.
+            Welcome {profile.full_name}! As a field officer, please use the mobile application to access your dashboard and manage farm visits.
           </p>
           <button 
             onClick={() => window.location.href = '/auth'}
-            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors mr-2"
           >
             Switch Account
+          </button>
+          <button 
+            onClick={async () => {
+              const { signOut } = useAuth();
+              await signOut();
+            }}
+            className="px-4 py-2 bg-neutral-600 text-white rounded-lg hover:bg-neutral-700 transition-colors"
+          >
+            Sign Out
           </button>
         </div>
       </div>
@@ -97,6 +111,21 @@ function AdminDashboard() {
   );
 }
 
+// Auth guard component
+function AuthGuard({ children }: { children: React.ReactNode }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <>{children}</>;
+}
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="system" storageKey="farmetrics-theme">
@@ -106,7 +135,14 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Routes>
-              <Route path="/auth" element={<AuthForm />} />
+              <Route 
+                path="/auth" 
+                element={
+                  <AuthGuard>
+                    <AuthForm />
+                  </AuthGuard>
+                } 
+              />
               <Route path="/auth/callback" element={<AuthCallback />} />
               <Route 
                 path="/*" 
