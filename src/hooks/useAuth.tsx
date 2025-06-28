@@ -1,7 +1,6 @@
-
 import { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Session } from '@supabase/supabase-js';
+import { User, Session, AuthChangeEvent } from '@supabase/supabase-js';
 import { Tables } from '@/integrations/supabase/types';
 
 type UserProfile = Tables<'profiles'>;
@@ -55,14 +54,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: AuthChangeEvent, session) => {
         console.log('Auth event:', event, 'Session user ID:', session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         
         if (session?.user) {
           // For new signups, wait a bit longer for profile creation
-          const delay = event === 'SIGNED_UP' ? 2000 : 1000;
+          const delay = event === AuthChangeEvent.SIGNED_UP ? 2000 : 1000;
           setTimeout(async () => {
             const userProfile = await fetchProfile(session.user.id);
             setProfile(userProfile);
