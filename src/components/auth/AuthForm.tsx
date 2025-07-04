@@ -5,24 +5,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Mail, Lock, User, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export function AuthForm() {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [role, setRole] = useState<'admin' | 'supervisor'>('supervisor');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const { signIn, signUp, signInWithGoogle, user, profile } = useAuth();
+  const { signIn, signInWithGoogle, user, profile } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if user is already authenticated
@@ -38,46 +34,17 @@ export function AuthForm() {
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        if (!fullName.trim()) {
-          setError("Full name is required");
-          return;
-        }
-        
-        console.log('Starting signup process...');
-        const { error } = await signUp(email, password, {
-          full_name: fullName,
-          role: role
-        });
-        
-        if (error) {
-          console.error('Signup error:', error);
-          if (error.message.includes('User already registered')) {
-            setError("An account with this email already exists. Please sign in instead.");
-          } else if (error.message.includes('Password should be at least')) {
-            setError("Password should be at least 6 characters long.");
-          } else if (error.message.includes('Database error')) {
-            setError("There was an issue creating your account. Please try again.");
-          } else {
-            setError(error.message);
-          }
+      const { error } = await signIn(email, password);
+      if (error) {
+        console.error('Signin error:', error);
+        if (error.message.includes('Invalid login credentials')) {
+          setError("Invalid email or password. Please check your credentials and try again.");
         } else {
-          console.log('Signup successful, redirecting to dashboard...');
-          // The useEffect above will handle the redirect
+          setError(error.message);
         }
       } else {
-        const { error } = await signIn(email, password);
-        if (error) {
-          console.error('Signin error:', error);
-          if (error.message.includes('Invalid login credentials')) {
-            setError("Invalid email or password. Please check your credentials and try again.");
-          } else {
-            setError(error.message);
-          }
-        } else {
-          console.log('Signin successful, redirecting to dashboard...');
-          // The useEffect above will handle the redirect
-        }
+        console.log('Signin successful, redirecting to dashboard...');
+        // The useEffect above will handle the redirect
       }
     } catch (err) {
       console.error('Auth error:', err);
@@ -115,49 +82,14 @@ export function AuthForm() {
             </svg>
           </div>
           <CardTitle className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-            {isSignUp ? "Create Account" : "Welcome Back"}
+            Welcome Back
           </CardTitle>
           <p className="text-neutral-600 dark:text-neutral-400">
-            {isSignUp 
-              ? "Join the FarMetrics dashboard" 
-              : "Sign in to your FarMetrics account"
-            }
+            Sign in to your FarMetrics account
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {isSignUp && (
-              <>
-                <div className="space-y-2">
-                  <Label htmlFor="fullName" className="flex items-center gap-2">
-                    <User className="w-4 h-4" />
-                    Full Name
-                  </Label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Enter your full name"
-                    required
-                    className="bg-white/50 dark:bg-neutral-700/50"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="role">Role</Label>
-                  <Select value={role} onValueChange={(value: 'admin' | 'supervisor') => setRole(value)}>
-                    <SelectTrigger className="bg-white/50 dark:bg-neutral-700/50">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="supervisor">Supervisor</SelectItem>
-                      <SelectItem value="admin">Admin</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </>
-            )}
-            
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
@@ -211,7 +143,7 @@ export function AuthForm() {
               className="w-full bg-primary-600 hover:bg-primary-700 text-white"
               disabled={loading}
             >
-              {loading ? "Processing..." : (isSignUp ? "Create Account" : "Sign In")}
+              {loading ? "Processing..." : "Sign In"}
             </Button>
           </form>
 
@@ -250,23 +182,8 @@ export function AuthForm() {
               />
             </svg>
             Continue with Google
+          </Google>
           </Button>
-
-          <div className="text-center">
-            <button
-              type="button"
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setError(null);
-              }}
-              className="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
-            >
-              {isSignUp 
-                ? "Already have an account? Sign in" 
-                : "Don't have an account? Sign up"
-              }
-            </button>
-          </div>
         </CardContent>
       </Card>
     </div>

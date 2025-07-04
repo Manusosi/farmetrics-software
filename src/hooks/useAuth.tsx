@@ -1,3 +1,4 @@
+
 import { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Session } from '@supabase/supabase-js';
@@ -11,7 +12,6 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signUp: (email: string, password: string, userData: { full_name: string; role: 'admin' | 'supervisor' }) => Promise<{ error: any }>;
   signInWithGoogle: () => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   isAdmin: boolean;
@@ -120,42 +120,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signUp = async (
-    email: string, 
-    password: string, 
-    userData: { full_name: string; role: 'admin' | 'supervisor' }
-  ) => {
-    try {
-      setLoading(true);
-      
-      console.log('Signing up user with data:', userData);
-      
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: userData.full_name,
-            role: userData.role,
-          },
-        },
-      });
-      
-      if (error) {
-        console.error('Signup error:', error);
-      } else {
-        console.log('Signup successful:', data);
-      }
-      
-      return { error };
-    } catch (error) {
-      console.error('Sign up error:', error);
-      return { error };
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const signInWithGoogle = async () => {
     try {
       setLoading(true);
@@ -200,7 +164,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     profile,
     loading,
     signIn,
-    signUp,
     signInWithGoogle,
     signOut,
     isAdmin,
