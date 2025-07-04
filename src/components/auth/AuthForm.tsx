@@ -7,18 +7,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Mail, Lock, AlertCircle } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, AlertCircle, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export function AuthForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
-  const { signIn, signInWithGoogle, user, profile } = useAuth();
+  const { signIn, signUp, signInWithGoogle, user, profile } = useAuth();
   const navigate = useNavigate();
 
   // Redirect if user is already authenticated
@@ -34,17 +36,38 @@ export function AuthForm() {
     setLoading(true);
 
     try {
-      const { error } = await signIn(email, password);
-      if (error) {
-        console.error('Signin error:', error);
-        if (error.message.includes('Invalid login credentials')) {
-          setError("Invalid email or password. Please check your credentials and try again.");
+      if (isSignUp) {
+        if (!fullName.trim()) {
+          setError("Full name is required");
+          setLoading(false);
+          return;
+        }
+        const { error } = await signUp(email, password, fullName);
+        if (error) {
+          console.error('Signup error:', error);
+          if (error.message.includes('User already registered')) {
+            setError("An account with this email already exists. Please sign in instead.");
+          } else {
+            setError(error.message);
+          }
         } else {
-          setError(error.message);
+          console.log('Signup successful');
+          setError(null);
+          // Show success message for email confirmation
+          setError("Please check your email to confirm your account before signing in.");
         }
       } else {
-        console.log('Signin successful, redirecting to dashboard...');
-        // The useEffect above will handle the redirect
+        const { error } = await signIn(email, password);
+        if (error) {
+          console.error('Signin error:', error);
+          if (error.message.includes('Invalid login credentials')) {
+            setError("Invalid email or password. Please check your credentials and try again.");
+          } else {
+            setError(error.message);
+          }
+        } else {
+          console.log('Signin successful, redirecting to dashboard...');
+        }
       }
     } catch (err) {
       console.error('Auth error:', err);
@@ -82,14 +105,32 @@ export function AuthForm() {
             </svg>
           </div>
           <CardTitle className="text-2xl font-bold text-neutral-900 dark:text-neutral-100">
-            Welcome Back
+            {isSignUp ? 'Create Account' : 'Welcome Back'}
           </CardTitle>
           <p className="text-neutral-600 dark:text-neutral-400">
-            Sign in to your FarMetrics account
+            {isSignUp ? 'Sign up for your FarMetrics account' : 'Sign in to your FarMetrics account'}
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
           <form onSubmit={handleSubmit} className="space-y-4">
+            {isSignUp && (
+              <div className="space-y-2">
+                <Label htmlFor="fullName" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Full Name
+                </Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  placeholder="Enter your full name"
+                  required={isSignUp}
+                  className="bg-white/50 dark:bg-neutral-700/50"
+                />
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label htmlFor="email" className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
@@ -132,7 +173,7 @@ export function AuthForm() {
             </div>
 
             {error && (
-              <Alert variant="destructive">
+              <Alert variant={error.includes("check your email") ? "default" : "destructive"}>
                 <AlertCircle className="h-4 w-4" />
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
@@ -143,7 +184,7 @@ export function AuthForm() {
               className="w-full bg-primary-600 hover:bg-primary-700 text-white"
               disabled={loading}
             >
-              {loading ? "Processing..." : "Sign In"}
+              {loading ? "Processing..." : (isSignUp ? "Sign Up" : "Sign In")}
             </Button>
           </form>
 
@@ -183,6 +224,22 @@ export function AuthForm() {
             </svg>
             Continue with Google
           </Button>
+
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError(null);
+                setEmail("");
+                setPassword("");
+                setFullName("");
+              }}
+              className="text-sm text-primary-600 hover:text-primary-700 underline"
+            >
+              {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+            </button>
+          </div>
         </CardContent>
       </Card>
     </div>
