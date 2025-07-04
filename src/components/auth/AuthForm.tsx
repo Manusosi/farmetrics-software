@@ -182,7 +182,6 @@ export function AuthForm() {
               />
             </svg>
             Continue with Google
-          </Google>
           </Button>
         </CardContent>
       </Card>
